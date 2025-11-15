@@ -3,7 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
 //Este import es para los servicios HTTP
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,24 +25,27 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCardModule} from '@angular/material/card';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 //Para usar el mask
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 //Cambia el idioma a español
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { RegistroAdminComponent } from './partials/registro-admin/registro-admin.component';
-import { RegistroAlumnosComponent } from './partials/registro-alumnos/registro-alumnos.component';
-import { RegistroMaestrosComponent } from './partials/registro-maestros/registro-maestros.component';
-import { HomeScreenComponent } from './screens/home-screen/home-screen.component';
-import { AdminScreenComponent } from './screens/admin-screen/admin-screen.component';
-import { AlumnosScreenComponent } from './screens/alumnos-screen/alumnos-screen.component';
-import { MaestrosScreenComponent } from './screens/maestros-screen/maestros-screen.component';
 import { EliminarUserModalComponent } from './modals/eliminar-user-modal/eliminar-user-modal.component';
-import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
 import { NgChartsModule } from 'ng2-charts';
-import { LandingScreenComponent } from './screens/landing-screen/landing-screen.component';
-import { FooterComponent } from './partials/footer/footer.component';
-import { TecnicoScreenComponent } from './screens/tecnico-screen/tecnico-screen.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ReservationsListScreenComponent } from './screens/reservations-list-screen/reservations-list-screen.component';
+import { ReservationsFormScreenComponent } from './screens/reservations-form-screen/reservations-form-screen.component';
+import { LoansListScreenComponent } from './screens/loans-list-screen/loans-list-screen.component';
+import { LoansFormScreenComponent } from './screens/loans-form-screen/loans-form-screen.component';
+import { LabsListScreenComponent } from './screens/labs-list-screen/labs-list-screen.component';
+import { LabsFormScreenComponent } from './screens/labs-form-screen/labs-form-screen.component';
+import { EquipmentListScreenComponent } from './screens/equipment-list-screen/equipment-list-screen.component';
+import { EquipmentFormScreenComponent } from './screens/equipment-form-screen/equipment-form-screen.component';
+import { ReportsScreenComponent } from './screens/reports-screen/reports-screen.component';
 
 @NgModule({
   declarations: [
@@ -49,18 +53,16 @@ import { TecnicoScreenComponent } from './screens/tecnico-screen/tecnico-screen.
     LoginScreenComponent,
     RegistroUsuariosScreenComponent,
     NavbarComponent,
-    RegistroAdminComponent,
-    RegistroAlumnosComponent,
-    RegistroMaestrosComponent,
-    HomeScreenComponent,
-    AdminScreenComponent,
-    AlumnosScreenComponent,
-    MaestrosScreenComponent,
     EliminarUserModalComponent,
-    GraficasScreenComponent,
-    LandingScreenComponent,
-    FooterComponent,
-    TecnicoScreenComponent
+    ReservationsListScreenComponent,
+    ReservationsFormScreenComponent,
+    LoansListScreenComponent,
+    LoansFormScreenComponent,
+    LabsListScreenComponent,
+    LabsFormScreenComponent,
+    EquipmentListScreenComponent,
+    EquipmentFormScreenComponent,
+    ReportsScreenComponent
   ],
   imports: [
     BrowserModule,
@@ -81,10 +83,16 @@ import { TecnicoScreenComponent } from './screens/tecnico-screen/tecnico-screen.
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule,
-    NgChartsModule
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    NgChartsModule,
+    ReactiveFormsModule
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     provideNgxMask()
   ],
   bootstrap: [AppComponent]

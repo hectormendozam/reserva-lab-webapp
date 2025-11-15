@@ -1,0 +1,39 @@
+.reservas-container {
+  padding: 1.5rem;
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tabla-reservas {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-reservas th,
+.tabla-reservas td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+}
+
+.tabla-reservas th {
+  background-color: #f5f5f5;
+}
+
+.acciones button {
+  margin-right: 0.25rem;
+}
+
+.error {
+  color: #b00020;
+  margin-bottom: 0.5rem;
+}
+
+.vacio {
+  margin-top: 1rem;
+  font-style: italic;
+}

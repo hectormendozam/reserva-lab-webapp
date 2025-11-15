@@ -1,0 +1,95 @@
+<div class="wrapper">
+  <div class="section-reserva-form">
+    <div class="header-reserva-form">
+      <app-navbar [tipo]="'reservas'"></app-navbar>
+    </div>
+    
+    <div class="body-reserva-form p-4">
+      <div class="container">
+        <h1 class="mb-4">Nueva reserva de laboratorio</h1>
+
+        <form [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+          <div class="row">
+            <!-- Laboratorio -->
+            <div class="col-md-12 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Laboratorio</mat-label>
+                <mat-select formControlName="lab">
+                  <mat-option value="" disabled>Selecciona un laboratorio</mat-option>
+                  <mat-option *ngFor="let lab of laboratorios" [value]="lab.id">
+                    {{ lab.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('lab')?.hasError('required')">
+                  El laboratorio es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Fecha -->
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Fecha</mat-label>
+                <input matInput type="date" formControlName="date">
+                <mat-error *ngIf="formulario.get('date')?.hasError('required')">
+                  La fecha es obligatoria.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Hora inicio -->
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Hora inicio</mat-label>
+                <input matInput type="time" formControlName="start_time">
+                <mat-error *ngIf="formulario.get('start_time')?.hasError('required')">
+                  La hora de inicio es obligatoria.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Hora fin -->
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Hora fin</mat-label>
+                <input matInput type="time" formControlName="end_time">
+                <mat-error *ngIf="formulario.get('end_time')?.hasError('required')">
+                  La hora de fin es obligatoria.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Motivo -->
+            <div class="col-md-12 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Motivo</mat-label>
+                <textarea matInput rows="3" formControlName="reason"></textarea>
+                <mat-error *ngIf="formulario.get('reason')?.hasError('required')">
+                  El motivo es obligatorio.
+                </mat-error>
+                <mat-error *ngIf="formulario.get('reason')?.hasError('minlength')">
+                  El motivo debe tener al menos 5 caracteres.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Botones -->
+            <div class="col-12 text-center mt-3">
+              <button mat-raised-button type="button" (click)="cancelar()" class="me-3">
+                Cancelar
+              </button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="guardando">
+                {{ guardando ? 'Guardando...' : 'Guardar' }}
+              </button>
+            </div>
+
+            <!-- Mensaje de error -->
+            <div class="col-12 mt-3" *ngIf="error">
+              <div class="alert alert-danger">{{ error }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

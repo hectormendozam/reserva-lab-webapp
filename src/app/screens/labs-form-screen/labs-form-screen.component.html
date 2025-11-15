@@ -1,0 +1,112 @@
+<div class="wrapper">
+  <div class="section-lab-form">
+    <div class="header-lab-form">
+      <app-navbar [tipo]="'laboratorios'"></app-navbar>
+    </div>
+    
+    <div class="body-lab-form p-4">
+      <div class="container">
+        <h1 class="mb-4">Nuevo Laboratorio</h1>
+
+        <form [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+          <div class="row">
+            <!-- Nombre -->
+            <div class="col-md-12 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Nombre del laboratorio</mat-label>
+                <input matInput formControlName="name">
+                <mat-error *ngIf="formulario.get('name')?.hasError('required')">
+                  El nombre es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Edificio -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Edificio</mat-label>
+                <input matInput formControlName="building">
+                <mat-error *ngIf="formulario.get('building')?.hasError('required')">
+                  El edificio es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Piso -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Piso</mat-label>
+                <input matInput formControlName="floor">
+                <mat-error *ngIf="formulario.get('floor')?.hasError('required')">
+                  El piso es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Capacidad -->
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Capacidad</mat-label>
+                <input matInput type="number" min="1" formControlName="capacity">
+                <mat-error *ngIf="formulario.get('capacity')?.hasError('required')">
+                  La capacidad es obligatoria.
+                </mat-error>
+                <mat-error *ngIf="formulario.get('capacity')?.hasError('min')">
+                  La capacidad debe ser mayor a 0.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Tipo -->
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Tipo</mat-label>
+                <mat-select formControlName="type">
+                  <mat-option value="">Selecciona un tipo</mat-option>
+                  <mat-option value="COMPUTO">Cómputo</mat-option>
+                  <mat-option value="ELECTRONICA">Electrónica</mat-option>
+                  <mat-option value="BIOLOGIA">Biología</mat-option>
+                  <mat-option value="QUIMICA">Química</mat-option>
+                  <mat-option value="FISICA">Física</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('type')?.hasError('required')">
+                  El tipo es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option value="ACTIVE">Activo</mat-option>
+                  <mat-option value="INACTIVE">Inactivo</mat-option>
+                  <mat-option value="MAINTENANCE">Mantenimiento</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('status')?.hasError('required')">
+                  El estado es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Botones -->
+            <div class="col-12 text-center mt-3">
+              <button mat-raised-button type="button" (click)="cancelar()" class="me-3">
+                Cancelar
+              </button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="guardando">
+                {{ guardando ? 'Guardando...' : 'Guardar' }}
+              </button>
+            </div>
+
+            <!-- Mensaje de error -->
+            <div class="col-12 mt-3" *ngIf="error">
+              <div class="alert alert-danger">{{ error }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

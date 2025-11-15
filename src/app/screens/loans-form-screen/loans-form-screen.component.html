@@ -1,0 +1,84 @@
+<div class="wrapper">
+  <div class="section-prestamo-form">
+    <div class="header-prestamo-form">
+      <app-navbar [tipo]="'prestamos'"></app-navbar>
+    </div>
+    
+    <div class="body-prestamo-form p-4">
+      <div class="container">
+        <h1 class="mb-4">Nuevo préstamo de equipo</h1>
+
+        <form [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+          <div class="row">
+            <!-- Equipo -->
+            <div class="col-md-12 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Equipo</mat-label>
+                <mat-select formControlName="equipment">
+                  <mat-option value="" disabled>Selecciona un equipo</mat-option>
+                  <mat-option *ngFor="let eq of equipos" [value]="eq.id">
+                    {{ eq.name }} (Disponibles: {{ eq.available_quantity }}/{{ eq.total_quantity }})
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('equipment')?.hasError('required')">
+                  El equipo es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Cantidad -->
+            <div class="col-md-12 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Cantidad</mat-label>
+                <input matInput type="number" min="1" formControlName="quantity">
+                <mat-error *ngIf="formulario.get('quantity')?.hasError('required')">
+                  La cantidad es obligatoria.
+                </mat-error>
+                <mat-error *ngIf="formulario.get('quantity')?.hasError('min')">
+                  La cantidad debe ser mayor a 0.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Fecha de préstamo -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Fecha de préstamo</mat-label>
+                <input matInput type="date" formControlName="loan_date">
+                <mat-error *ngIf="formulario.get('loan_date')?.hasError('required')">
+                  La fecha de préstamo es obligatoria.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Fecha de devolución prevista -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Fecha de devolución prevista</mat-label>
+                <input matInput type="date" formControlName="due_date">
+                <mat-error *ngIf="formulario.get('due_date')?.hasError('required')">
+                  La fecha de devolución prevista es obligatoria.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Botones -->
+            <div class="col-12 text-center mt-3">
+              <button mat-raised-button type="button" (click)="cancelar()" class="me-3">
+                Cancelar
+              </button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="guardando">
+                {{ guardando ? 'Guardando...' : 'Guardar' }}
+              </button>
+            </div>
+
+            <!-- Mensaje de error -->
+            <div class="col-12 mt-3" *ngIf="error">
+              <div class="alert alert-danger">{{ error }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

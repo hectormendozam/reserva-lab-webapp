@@ -1,0 +1,82 @@
+<div class="wrapper">
+  <div class="section-equipment">
+    <div class="header-equipment">
+      <app-navbar [tipo]="'equipos'"></app-navbar>
+    </div>
+    
+    <div class="body-equipment p-4">
+      <div class="container">
+        <div class="encabezado d-flex justify-content-between align-items-center mb-4">
+          <h1>Gestión de Equipos</h1>
+          <button mat-raised-button color="primary" (click)="irNuevoEquipo()">
+            <mat-icon>add</mat-icon>
+            Nuevo Equipo
+          </button>
+        </div>
+
+        <div *ngIf="cargando" class="text-center">
+          <p>Cargando equipos...</p>
+        </div>
+        
+        <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+        <div *ngIf="!cargando && equipos.length" class="mat-elevation-z8">
+          <table mat-table [dataSource]="equipos" class="w-100">
+            <!-- Columna ID -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let eq">{{ eq.id }}</td>
+            </ng-container>
+
+            <!-- Columna Nombre -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let eq">{{ eq.name }}</td>
+            </ng-container>
+
+            <!-- Columna Descripción -->
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>Descripción</th>
+              <td mat-cell *matCellDef="let eq">{{ eq.description }}</td>
+            </ng-container>
+
+            <!-- Columna Número inventario -->
+            <ng-container matColumnDef="inventory_number">
+              <th mat-header-cell *matHeaderCellDef>N° Inventario</th>
+              <td mat-cell *matCellDef="let eq">{{ eq.inventory_number }}</td>
+            </ng-container>
+
+            <!-- Columna Cantidad Total -->
+            <ng-container matColumnDef="total_quantity">
+              <th mat-header-cell *matHeaderCellDef>Total</th>
+              <td mat-cell *matCellDef="let eq">{{ eq.total_quantity }}</td>
+            </ng-container>
+
+            <!-- Columna Disponible -->
+            <ng-container matColumnDef="available_quantity">
+              <th mat-header-cell *matHeaderCellDef>Disponible</th>
+              <td mat-cell *matCellDef="let eq">{{ eq.available_quantity }}</td>
+            </ng-container>
+
+            <!-- Columna Estado -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let eq">
+                <span [class]="'badge badge-' + eq.status.toLowerCase()">
+                  {{ traducirEstado(eq.status) }}
+                </span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+          </table>
+        </div>
+
+        <div *ngIf="!cargando && !equipos.length" class="alert alert-info mt-3">
+          No hay equipos registrados. Haz clic en "Nuevo Equipo" para crear uno.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

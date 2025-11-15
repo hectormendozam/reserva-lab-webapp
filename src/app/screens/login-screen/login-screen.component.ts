@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FacadeService } from 'src/app/services/facade.service';
+import { AuthService } from 'src/app/services/auth.service';
 declare var $:any;
 
 @Component({
@@ -17,7 +17,7 @@ export class LoginScreenComponent implements OnInit{
 
   constructor(
     private router: Router,
-    private facadeService: FacadeService
+    private authService: AuthService
   ){}
 
   ngOnInit(): void {
@@ -26,21 +26,49 @@ export class LoginScreenComponent implements OnInit{
 
   public login(){
     this.load = true;
-    //Validar
-    this.errors = [];
+    this.errors = {};
 
-    this.errors = this.facadeService.validarLogin(this.username, this.password);
-    if(!$.isEmptyObject(this.errors)){
-      return false;
+    // Validaciones básicas
+    if(!this.username || this.username.trim() === ''){
+      this.errors.username = 'El correo electrónico es requerido';
     }
-    //Si pasa la validación ir a la página de home
-    this.facadeService.login(this.username, this.password).subscribe(
-      (response)=>{
-        this.facadeService.saveUserData(response);
-        this.router.navigate(["home"]);
+    if(!this.password || this.password.trim() === ''){
+      this.errors.password = 'La contraseña es requerida';
+    }
+
+    // Si hay errores, no continuar
+    if(Object.keys(this.errors).length > 0){
+      this.load = false;
+      return;
+    }
+
+    // Realizar login con el nuevo AuthService
+    this.authService.login({
+      email: this.username.toString(),
+      password: this.password.toString()
+    }).subscribe(
+      (response) => {
+        // Guardar tokens en localStorage
+        localStorage.setItem('access_token', response.access);
+        localStorage.setItem('refresh_token', response.refresh);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        
         this.load = false;
-      }, (error)=>{
-        alert("No se pudo iniciar sesión");
+        
+        // Redirigir según el rol del usuario
+        const userRole = response.user.role;
+        if(userRole === 'ADMIN' || userRole === 'TECH'){
+          this.router.navigate(["/reservas"]);
+        } else if(userRole === 'STUDENT'){
+          this.router.navigate(["/reservas"]);
+        } else {
+          this.router.navigate(["/reservas"]);
+        }
+      },
+      (error) => {
+        this.load = false;
+        console.error("Error al iniciar sesión:", error);
+        alert("No se pudo iniciar sesión. Verifica tus credenciales.");
       }
     );
   }

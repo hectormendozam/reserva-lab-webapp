@@ -11,7 +11,7 @@
           <!-- Radio buttons -->
           <div class="row mt-5" style="text-align: center;">
             <div class="form-group col-12">
-              <label class="title-user" for="tipo_usuario">Tipo de usuario</label>
+              <label class="title-user">Tipo de usuario</label>
             </div>
             <div class="row mt-3" style="text-align: center;">
               <div class="form-group col-12">
@@ -22,20 +22,90 @@
                 </mat-radio-group>
               </div>
             </div>
-            <!-- Formularios de todos los usuarios -->
-            <section class="forms-registro">
-              <!-- Formulario del admin -->
-              <section class="registro-admin" *ngIf="isAdmin">
-                <app-registro-admin [rol]="tipo_user" [datos_user]="user"></app-registro-admin>
-              </section>
-              <!-- Formulario del alumno -->
-              <section class="registro-alumnos" *ngIf="isAlumno">
-                <app-registro-alumnos [rol]="tipo_user" [datos_user]="user"></app-registro-alumnos>
-              </section>
-              <!-- Formulario del maestro -->
-              <section class="registro-maestros" *ngIf="isMaestro">
-                <app-registro-maestros [rol]="tipo_user" [datos_user]="user"></app-registro-maestros>
-              </section>
+            
+            <!-- Formulario unificado de registro -->
+            <section class="forms-registro" *ngIf="user.tipo_usuario">
+              <div class="container">
+                <form class="mt-5">
+                  <div class="row">
+                    <!-- Nombre -->
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Nombre(s)</mat-label>
+                        <input matInput [(ngModel)]="user.first_name" name="first_name" required>
+                      </mat-form-field>
+                    </div>
+                    
+                    <!-- Apellidos -->
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Apellidos</mat-label>
+                        <input matInput [(ngModel)]="user.last_name" name="last_name" required>
+                      </mat-form-field>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Correo electrónico</mat-label>
+                        <input matInput type="email" [(ngModel)]="user.email" name="email" required>
+                      </mat-form-field>
+                    </div>
+                    
+                    <!-- Contraseña -->
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Contraseña</mat-label>
+                        <input matInput type="password" [(ngModel)]="user.password" name="password" required [disabled]="editar">
+                      </mat-form-field>
+                    </div>
+                    
+                    <!-- Campos específicos por rol -->
+                    
+                    <!-- Campo para Alumno: Matrícula -->
+                    <div class="col-md-6 mb-3" *ngIf="isAlumno">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Matrícula</mat-label>
+                        <input matInput [(ngModel)]="user.student_id" name="student_id">
+                      </mat-form-field>
+                    </div>
+                    
+                    <!-- Campo para Alumno: Carrera -->
+                    <div class="col-md-6 mb-3" *ngIf="isAlumno">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Carrera</mat-label>
+                        <input matInput [(ngModel)]="user.career" name="career">
+                      </mat-form-field>
+                    </div>
+                    
+                    <!-- Campo para Técnico: Departamento -->
+                    <div class="col-md-6 mb-3" *ngIf="isMaestro">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Departamento</mat-label>
+                        <input matInput [(ngModel)]="user.department" name="department">
+                      </mat-form-field>
+                    </div>
+                    
+                    <!-- Campo para Técnico: Teléfono -->
+                    <div class="col-md-6 mb-3" *ngIf="isMaestro">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Teléfono</mat-label>
+                        <input matInput [(ngModel)]="user.phone" name="phone">
+                      </mat-form-field>
+                    </div>
+                    
+                    <!-- Botones -->
+                    <div class="col-12 mt-4 text-center">
+                      <button mat-raised-button color="primary" (click)="registrar()" class="me-3">
+                        {{ editar ? 'Actualizar' : 'Registrar' }}
+                      </button>
+                      <button mat-raised-button (click)="goBack()">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </section>
           </div>
         </div>

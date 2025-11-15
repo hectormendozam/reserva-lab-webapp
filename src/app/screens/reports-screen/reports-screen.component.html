@@ -1,0 +1,169 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mb-4">
+        <mat-icon class="align-middle me-2">assessment</mat-icon>
+        Reportes del Sistema
+      </h2>
+    </div>
+  </div>
+
+  <!-- Reporte de Ocupación de Laboratorios -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="me-2">business</mat-icon>
+            Ocupación de Laboratorios
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="cargandoOcupacion" class="text-center py-4">
+            <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+            <p class="mt-2">Cargando reporte de ocupación...</p>
+          </div>
+
+          <div *ngIf="errorOcupacion" class="alert alert-danger">
+            <mat-icon class="align-middle me-2">error</mat-icon>
+            {{ errorOcupacion }}
+          </div>
+
+          <div *ngIf="!cargandoOcupacion && ocupacion.length" class="table-responsive">
+            <table mat-table [dataSource]="ocupacion" class="w-100">
+              <ng-container matColumnDef="lab_name">
+                <th mat-header-cell *matHeaderCellDef>Laboratorio</th>
+                <td mat-cell *matCellDef="let row">{{ row.lab_name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="period">
+                <th mat-header-cell *matHeaderCellDef>Periodo</th>
+                <td mat-cell *matCellDef="let row">{{ row.period }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="occupancy_rate">
+                <th mat-header-cell *matHeaderCellDef>Tasa de Ocupación</th>
+                <td mat-cell *matCellDef="let row">
+                  <strong>{{ row.occupancy_rate | percent:'1.0-2' }}</strong>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columnasOcupacion"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasOcupacion;"></tr>
+            </table>
+          </div>
+
+          <div *ngIf="!cargandoOcupacion && !ocupacion.length" class="alert alert-info">
+            <mat-icon class="align-middle me-2">info</mat-icon>
+            No hay datos de ocupación disponibles.
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Reporte de Equipos Más Utilizados -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="me-2">devices</mat-icon>
+            Equipos Más Utilizados
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="cargandoUso" class="text-center py-4">
+            <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+            <p class="mt-2">Cargando reporte de uso de equipos...</p>
+          </div>
+
+          <div *ngIf="errorUso" class="alert alert-danger">
+            <mat-icon class="align-middle me-2">error</mat-icon>
+            {{ errorUso }}
+          </div>
+
+          <div *ngIf="!cargandoUso && usoEquipos.length" class="table-responsive">
+            <table mat-table [dataSource]="usoEquipos" class="w-100">
+              <ng-container matColumnDef="equipment_name">
+                <th mat-header-cell *matHeaderCellDef>Equipo</th>
+                <td mat-cell *matCellDef="let row">{{ row.equipment_name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="total_loans">
+                <th mat-header-cell *matHeaderCellDef>Total de Préstamos</th>
+                <td mat-cell *matCellDef="let row">
+                  <span class="badge bg-primary">{{ row.total_loans }}</span>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columnasUso"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasUso;"></tr>
+            </table>
+          </div>
+
+          <div *ngIf="!cargandoUso && !usoEquipos.length" class="alert alert-info">
+            <mat-icon class="align-middle me-2">info</mat-icon>
+            No hay datos de uso de equipos disponibles.
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Reporte de Incidencias -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="me-2">warning</mat-icon>
+            Incidencias (Daños o Pérdidas)
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="cargandoIncidencias" class="text-center py-4">
+            <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+            <p class="mt-2">Cargando reporte de incidencias...</p>
+          </div>
+
+          <div *ngIf="errorIncidencias" class="alert alert-danger">
+            <mat-icon class="align-middle me-2">error</mat-icon>
+            {{ errorIncidencias }}
+          </div>
+
+          <div *ngIf="!cargandoIncidencias && incidencias.length" class="table-responsive">
+            <table mat-table [dataSource]="incidencias" class="w-100">
+              <ng-container matColumnDef="equipment_name">
+                <th mat-header-cell *matHeaderCellDef>Equipo</th>
+                <td mat-cell *matCellDef="let row">{{ row.equipment_name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="damage_type">
+                <th mat-header-cell *matHeaderCellDef>Tipo de Daño</th>
+                <td mat-cell *matCellDef="let row">
+                  <span class="badge bg-danger">{{ row.damage_type }}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="reported_at">
+                <th mat-header-cell *matHeaderCellDef>Fecha de Reporte</th>
+                <td mat-cell *matCellDef="let row">{{ row.reported_at | date:'short' }}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columnasIncidencias"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasIncidencias;"></tr>
+            </table>
+          </div>
+
+          <div *ngIf="!cargandoIncidencias && !incidencias.length" class="alert alert-success">
+            <mat-icon class="align-middle me-2">check_circle</mat-icon>
+            No hay incidencias registradas. ¡Todo en orden!
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

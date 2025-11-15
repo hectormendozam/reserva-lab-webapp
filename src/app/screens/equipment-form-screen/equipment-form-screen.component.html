@@ -1,0 +1,118 @@
+<div class="wrapper">
+  <div class="section-equipment-form">
+    <div class="header-equipment-form">
+      <app-navbar [tipo]="'equipos'"></app-navbar>
+    </div>
+    
+    <div class="body-equipment-form p-4">
+      <div class="container">
+        <h1 class="mb-4">Nuevo Equipo de Laboratorio</h1>
+
+        <form [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+          <div class="row">
+            <!-- Nombre -->
+            <div class="col-md-12 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Nombre del equipo</mat-label>
+                <input matInput formControlName="name">
+                <mat-error *ngIf="formulario.get('name')?.hasError('required')">
+                  El nombre es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-md-12 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Descripción</mat-label>
+                <textarea matInput rows="3" formControlName="description"></textarea>
+                <mat-error *ngIf="formulario.get('description')?.hasError('required')">
+                  La descripción es obligatoria.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Número de inventario -->
+            <div class="col-md-12 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Número de inventario</mat-label>
+                <input matInput formControlName="inventory_number">
+                <mat-error *ngIf="formulario.get('inventory_number')?.hasError('required')">
+                  El número de inventario es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Cantidad total -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Cantidad total</mat-label>
+                <input matInput type="number" min="1" formControlName="total_quantity">
+                <mat-error *ngIf="formulario.get('total_quantity')?.hasError('required')">
+                  La cantidad total es obligatoria.
+                </mat-error>
+                <mat-error *ngIf="formulario.get('total_quantity')?.hasError('min')">
+                  La cantidad total debe ser mayor a 0.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Cantidad disponible -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Cantidad disponible</mat-label>
+                <input matInput type="number" min="0" formControlName="available_quantity">
+                <mat-error *ngIf="formulario.get('available_quantity')?.hasError('required')">
+                  La cantidad disponible es obligatoria.
+                </mat-error>
+                <mat-error *ngIf="formulario.get('available_quantity')?.hasError('min')">
+                  La cantidad disponible no puede ser negativa.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option value="AVAILABLE">Disponible</mat-option>
+                  <mat-option value="MAINTENANCE">En mantenimiento</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('status')?.hasError('required')">
+                  El estado es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Laboratorio (opcional) -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Laboratorio (opcional)</mat-label>
+                <mat-select formControlName="lab">
+                  <mat-option [value]="null">Sin laboratorio asignado</mat-option>
+                  <mat-option *ngFor="let lab of laboratorios" [value]="lab.id">{{ lab.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Botones -->
+            <div class="col-12 text-center mt-3">
+              <button mat-raised-button type="button" (click)="cancelar()" class="me-3">
+                Cancelar
+              </button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="guardando">
+                {{ guardando ? 'Guardando...' : 'Guardar' }}
+              </button>
+            </div>
+
+            <!-- Mensaje de error -->
+            <div class="col-12 mt-3" *ngIf="error">
+              <div class="alert alert-danger">{{ error }}</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

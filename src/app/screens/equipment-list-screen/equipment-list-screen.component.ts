@@ -12,7 +12,7 @@ export class EquipmentListScreenComponent implements OnInit {
   equipos: Equipment[] = [];
   cargando = false;
   error?: string;
-  columnasTabla: string[] = ['id', 'name', 'description', 'inventory_number', 'total_quantity', 'available_quantity', 'status'];
+  columnasTabla: string[] = ['id', 'nombre', 'descripcion', 'numeroInventario', 'cantidadTotal', 'cantidadDisponible', 'status'];
 
   constructor(
     private equipmentService: EquipmentService,
@@ -44,9 +44,9 @@ export class EquipmentListScreenComponent implements OnInit {
 
   traducirEstado(estado: EquipmentStatus): string {
     switch (estado) {
-      case 'AVAILABLE':
+      case 'DISPONIBLE':
         return 'Disponible';
-      case 'MAINTENANCE':
+      case 'MANTENIMIENTO':
         return 'Mantenimiento';
       default:
         return estado;

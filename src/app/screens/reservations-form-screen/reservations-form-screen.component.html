@@ -30,8 +30,8 @@
             <div class="col-md-4 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Fecha</mat-label>
-                <input matInput type="date" formControlName="date">
-                <mat-error *ngIf="formulario.get('date')?.hasError('required')">
+                <input matInput type="date" formControlName="fecha">
+                <mat-error *ngIf="formulario.get('fecha')?.hasError('required')">
                   La fecha es obligatoria.
                 </mat-error>
               </mat-form-field>
@@ -41,8 +41,8 @@
             <div class="col-md-4 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Hora inicio</mat-label>
-                <input matInput type="time" formControlName="start_time">
-                <mat-error *ngIf="formulario.get('start_time')?.hasError('required')">
+                <input matInput type="time" formControlName="horaInicio">
+                <mat-error *ngIf="formulario.get('horaInicio')?.hasError('required')">
                   La hora de inicio es obligatoria.
                 </mat-error>
               </mat-form-field>
@@ -52,8 +52,8 @@
             <div class="col-md-4 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Hora fin</mat-label>
-                <input matInput type="time" formControlName="end_time">
-                <mat-error *ngIf="formulario.get('end_time')?.hasError('required')">
+                <input matInput type="time" formControlName="horaFin">
+                <mat-error *ngIf="formulario.get('horaFin')?.hasError('required')">
                   La hora de fin es obligatoria.
                 </mat-error>
               </mat-form-field>
@@ -63,11 +63,11 @@
             <div class="col-md-12 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Motivo</mat-label>
-                <textarea matInput rows="3" formControlName="reason"></textarea>
-                <mat-error *ngIf="formulario.get('reason')?.hasError('required')">
+                <textarea matInput rows="3" formControlName="motivo"></textarea>
+                <mat-error *ngIf="formulario.get('motivo')?.hasError('required')">
                   El motivo es obligatorio.
                 </mat-error>
-                <mat-error *ngIf="formulario.get('reason')?.hasError('minlength')">
+                <mat-error *ngIf="formulario.get('motivo')?.hasError('minlength')">
                   El motivo debe tener al menos 5 caracteres.
                 </mat-error>
               </mat-form-field>

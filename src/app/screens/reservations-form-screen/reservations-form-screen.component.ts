@@ -29,10 +29,10 @@ export class ReservationsFormScreenComponent implements OnInit {
   ngOnInit(): void {
     this.formulario = this.fb.group({
       lab: [null, Validators.required],
-      date: [null, Validators.required],
-      start_time: [null, Validators.required],
-      end_time: [null, Validators.required],
-      reason: [null, [Validators.required, Validators.minLength(5)]],
+      fecha: [null, Validators.required],
+      horaInicio: [null, Validators.required],
+      horaFin: [null, Validators.required],
+      motivo: [null, [Validators.required, Validators.minLength(5)]],
     });
 
     this.cargarLaboratorios();
@@ -45,9 +45,9 @@ export class ReservationsFormScreenComponent implements OnInit {
         // Si no hay laboratorios, usar datos de ejemplo
         if (this.laboratorios.length === 0) {
           this.laboratorios = [
-            { id: 1, name: 'Laboratorio de Cómputo 1', building: 'Edificio A', floor: '1', capacity: 30, type: 'COMPUTO', status: 'ACTIVE' },
-            { id: 2, name: 'Laboratorio de Electrónica', building: 'Edificio B', floor: '2', capacity: 25, type: 'ELECTRONICA', status: 'ACTIVE' },
-            { id: 3, name: 'Laboratorio de Cómputo 2', building: 'Edificio C', floor: '1', capacity: 35, type: 'COMPUTO', status: 'ACTIVE' }
+            { id: 1, name: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
+            { id: 2, name: 'Laboratorio de Electrónica', edificio: 'Edificio B', piso: '2', capacidad: 25, tipo: 'ELECTRONICA', status: 'ACTIVO' },
+            { id: 3, name: 'Laboratorio de Cómputo 2', edificio: 'Edificio C', piso: '1', capacidad: 35, tipo: 'COMPUTO', status: 'ACTIVO' }
           ];
           console.warn('No hay laboratorios en el backend, usando datos de ejemplo');
         }
@@ -55,9 +55,9 @@ export class ReservationsFormScreenComponent implements OnInit {
       error: () => {
         // En caso de error, también usar datos de ejemplo
         this.laboratorios = [
-          { id: 1, name: 'Laboratorio de Cómputo 1', building: 'Edificio A', floor: '1', capacity: 30, type: 'COMPUTO', status: 'ACTIVE' },
-          { id: 2, name: 'Laboratorio de Electrónica', building: 'Edificio B', floor: '2', capacity: 25, type: 'ELECTRONICA', status: 'ACTIVE' },
-          { id: 3, name: 'Laboratorio de Cómputo 2', building: 'Edificio C', floor: '1', capacity: 35, type: 'COMPUTO', status: 'ACTIVE' }
+          { id: 1, name: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
+          { id: 2, name: 'Laboratorio de Electrónica', edificio: 'Edificio B', piso: '2', capacidad: 25, tipo: 'ELECTRONICA', status: 'ACTIVO' },
+          { id: 3, name: 'Laboratorio de Cómputo 2', edificio: 'Edificio C', piso: '1', capacidad: 35, tipo: 'COMPUTO', status: 'ACTIVO' }
         ];
         this.error = 'No se pudieron cargar los laboratorios del servidor. Mostrando datos de ejemplo.';
         console.warn('Error al cargar laboratorios, usando datos de ejemplo');
@@ -78,10 +78,10 @@ export class ReservationsFormScreenComponent implements OnInit {
     const nuevaReserva: Partial<Reservation> = {
       user: this.usuarioIdDemo,
       lab: valores.lab,
-      date: valores.date,
-      start_time: valores.start_time,
-      end_time: valores.end_time,
-      reason: valores.reason,
+      fecha: valores.fecha,
+      horaInicio: valores.horaInicio,
+      horaFin: valores.horaFin,
+      motivo: valores.motivo,
     };
 
     this.reservationsService.create(nuevaReserva).subscribe({

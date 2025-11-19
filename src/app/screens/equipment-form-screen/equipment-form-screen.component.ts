@@ -25,12 +25,12 @@ export class EquipmentFormScreenComponent implements OnInit {
 
   ngOnInit(): void {
     this.formulario = this.fb.group({
-      name: [null, Validators.required],
-      description: [null, Validators.required],
-      inventory_number: [null, Validators.required],
-      total_quantity: [1, [Validators.required, Validators.min(1)]],
-      available_quantity: [1, [Validators.required, Validators.min(0)]],
-      status: ['AVAILABLE', Validators.required],
+      nombre: [null, Validators.required],
+      descripcion: [null, Validators.required],
+      numeroInventario: [null, Validators.required],
+      cantidadTotal: [1, [Validators.required, Validators.min(1)]],
+      cantidadDisponible: [1, [Validators.required, Validators.min(0)]],
+      status: ['DISPONIBLE', Validators.required],
       lab: [null],
     });
 
@@ -38,7 +38,7 @@ export class EquipmentFormScreenComponent implements OnInit {
   }
 
   cargarLaboratorios(): void {
-    this.labsService.list({ status: 'ACTIVE' }).subscribe({
+    this.labsService.list({ status: 'ACTIVO' }).subscribe({
       next: (labs) => (this.laboratorios = labs),
       error: () => (this.error = 'No se pudieron cargar los laboratorios.'),
     });

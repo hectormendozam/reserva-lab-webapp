@@ -25,8 +25,8 @@
             <div class="col-md-6 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Edificio</mat-label>
-                <input matInput formControlName="building">
-                <mat-error *ngIf="formulario.get('building')?.hasError('required')">
+                <input matInput formControlName="edificio">
+                <mat-error *ngIf="formulario.get('edificio')?.hasError('required')">
                   El edificio es obligatorio.
                 </mat-error>
               </mat-form-field>
@@ -36,8 +36,8 @@
             <div class="col-md-6 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Piso</mat-label>
-                <input matInput formControlName="floor">
-                <mat-error *ngIf="formulario.get('floor')?.hasError('required')">
+                <input matInput formControlName="piso">
+                <mat-error *ngIf="formulario.get('piso')?.hasError('required')">
                   El piso es obligatorio.
                 </mat-error>
               </mat-form-field>
@@ -47,11 +47,11 @@
             <div class="col-md-4 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Capacidad</mat-label>
-                <input matInput type="number" min="1" formControlName="capacity">
-                <mat-error *ngIf="formulario.get('capacity')?.hasError('required')">
+                <input matInput type="number" min="1" formControlName="capacidad">
+                <mat-error *ngIf="formulario.get('capacidad')?.hasError('required')">
                   La capacidad es obligatoria.
                 </mat-error>
-                <mat-error *ngIf="formulario.get('capacity')?.hasError('min')">
+                <mat-error *ngIf="formulario.get('capacidad')?.hasError('min')">
                   La capacidad debe ser mayor a 0.
                 </mat-error>
               </mat-form-field>
@@ -61,7 +61,7 @@
             <div class="col-md-4 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Tipo</mat-label>
-                <mat-select formControlName="type">
+                <mat-select formControlName="tipo">
                   <mat-option value="">Selecciona un tipo</mat-option>
                   <mat-option value="COMPUTO">Cómputo</mat-option>
                   <mat-option value="ELECTRONICA">Electrónica</mat-option>
@@ -69,7 +69,7 @@
                   <mat-option value="QUIMICA">Química</mat-option>
                   <mat-option value="FISICA">Física</mat-option>
                 </mat-select>
-                <mat-error *ngIf="formulario.get('type')?.hasError('required')">
+                <mat-error *ngIf="formulario.get('tipo')?.hasError('required')">
                   El tipo es obligatorio.
                 </mat-error>
               </mat-form-field>
@@ -80,9 +80,9 @@
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Estado</mat-label>
                 <mat-select formControlName="status">
-                  <mat-option value="ACTIVE">Activo</mat-option>
-                  <mat-option value="INACTIVE">Inactivo</mat-option>
-                  <mat-option value="MAINTENANCE">Mantenimiento</mat-option>
+                  <mat-option value="ACTIVO">Activo</mat-option>
+                  <mat-option value="INACTIVO">Inactivo</mat-option>
+                  <mat-option value="MANTENIMIENTO">Mantenimiento</mat-option>
                 </mat-select>
                 <mat-error *ngIf="formulario.get('status')?.hasError('required')">
                   El estado es obligatorio.

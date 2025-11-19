@@ -12,7 +12,7 @@ export class LabsListScreenComponent implements OnInit {
   laboratorios: Lab[] = [];
   cargando = false;
   error?: string;
-  columnasTabla: string[] = ['id', 'name', 'building', 'floor', 'capacity', 'type', 'status'];
+  columnasTabla: string[] = ['id', 'name', 'edificio', 'piso', 'capacidad', 'tipo', 'status'];
 
   constructor(
     private labsService: LabsService,
@@ -44,11 +44,11 @@ export class LabsListScreenComponent implements OnInit {
 
   traducirEstado(estado: LabStatus): string {
     switch (estado) {
-      case 'ACTIVE':
+      case 'ACTIVO':
         return 'Activo';
-      case 'INACTIVE':
+      case 'INACTIVO':
         return 'Inactivo';
-      case 'MAINTENANCE':
+      case 'MANTENIMIENTO':
         return 'Mantenimiento';
       default:
         return estado;

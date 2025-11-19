@@ -11,9 +11,9 @@ export class ReportsScreenComponent implements OnInit {
   usoEquipos: EquipmentUsageReport[] = [];
   incidencias: IncidentReport[] = [];
 
-  columnasOcupacion: string[] = ['lab_name', 'period', 'occupancy_rate'];
-  columnasUso: string[] = ['equipment_name', 'total_loans'];
-  columnasIncidencias: string[] = ['equipment_name', 'damage_type', 'reported_at'];
+  columnasOcupacion: string[] = ['nombreLaboratorio', 'periodo', 'tasaOcupacion'];
+  columnasUso: string[] = ['nombreEquipo', 'totalPrestamos'];
+  columnasIncidencias: string[] = ['nombreEquipo', 'tipoDano', 'fechaReporte'];
 
   cargandoOcupacion = false;
   cargandoUso = false;

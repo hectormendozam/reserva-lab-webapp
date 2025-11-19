@@ -12,7 +12,7 @@ export class ReservationsListScreenComponent implements OnInit {
   reservas: Reservation[] = [];
   cargando = false;
   error?: string;
-  columnasTabla: string[] = ['id', 'user', 'lab', 'date', 'start_time', 'end_time', 'status', 'acciones'];
+  columnasTabla: string[] = ['id', 'user', 'lab', 'fecha', 'horaInicio', 'horaFin', 'status', 'acciones'];
 
   constructor(
     private reservationsService: ReservationsService,
@@ -57,13 +57,13 @@ export class ReservationsListScreenComponent implements OnInit {
 
   traducirEstado(estado: ReservationStatus): string {
     switch (estado) {
-      case 'PENDING':
+      case 'PENDIENTE':
         return 'Pendiente';
-      case 'APPROVED':
+      case 'APROBADO':
         return 'Aprobada';
-      case 'REJECTED':
+      case 'RECHAZADO':
         return 'Rechazada';
-      case 'CANCELLED':
+      case 'CANCELADO':
         return 'Cancelada';
       default:
         return estado;

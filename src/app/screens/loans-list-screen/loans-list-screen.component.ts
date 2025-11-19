@@ -12,7 +12,7 @@ export class LoansListScreenComponent implements OnInit {
   prestamos: Loan[] = [];
   cargando = false;
   error?: string;
-  columnasTabla: string[] = ['id', 'user', 'equipment', 'quantity', 'loan_date', 'due_date', 'status', 'acciones'];
+  columnasTabla: string[] = ['id', 'user', 'equipo', 'cantidad', 'fechaPrestamo', 'fechaDevolucion', 'status', 'acciones'];
 
   constructor(
     private loansService: LoansService,
@@ -56,15 +56,15 @@ export class LoansListScreenComponent implements OnInit {
 
   traducirEstado(estado: LoanStatus): string {
     switch (estado) {
-      case 'PENDING':
+      case 'PENDIENTE':
         return 'Pendiente';
-      case 'APPROVED':
+      case 'APROBADO':
         return 'Aprobado';
-      case 'REJECTED':
+      case 'RECHAZADO':
         return 'Rechazado';
-      case 'RETURNED':
+      case 'DEVUELTO':
         return 'Devuelto';
-      case 'DAMAGED':
+      case 'DAÑADO':
         return 'Dañado';
       default:
         return estado;

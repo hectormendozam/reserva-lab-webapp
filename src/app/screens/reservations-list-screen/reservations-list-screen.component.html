@@ -41,21 +41,21 @@
             </ng-container>
 
             <!-- Columna Fecha -->
-            <ng-container matColumnDef="date">
+            <ng-container matColumnDef="fecha">
               <th mat-header-cell *matHeaderCellDef>Fecha</th>
-              <td mat-cell *matCellDef="let r">{{ r.date | date:'dd/MM/yyyy' }}</td>
+              <td mat-cell *matCellDef="let r">{{ r.fecha | date:'dd/MM/yyyy' }}</td>
             </ng-container>
 
             <!-- Columna Hora inicio -->
-            <ng-container matColumnDef="start_time">
+            <ng-container matColumnDef="horaInicio">
               <th mat-header-cell *matHeaderCellDef>Hora inicio</th>
-              <td mat-cell *matCellDef="let r">{{ r.start_time }}</td>
+              <td mat-cell *matCellDef="let r">{{ r.horaInicio }}</td>
             </ng-container>
 
             <!-- Columna Hora fin -->
-            <ng-container matColumnDef="end_time">
+            <ng-container matColumnDef="horaFin">
               <th mat-header-cell *matHeaderCellDef>Hora fin</th>
-              <td mat-cell *matCellDef="let r">{{ r.end_time }}</td>
+              <td mat-cell *matCellDef="let r">{{ r.horaFin }}</td>
             </ng-container>
 
             <!-- Columna Estado -->
@@ -74,19 +74,19 @@
               <td mat-cell *matCellDef="let r">
                 <button mat-icon-button color="primary" 
                         (click)="aprobar(r)" 
-                        [disabled]="r.status !== 'PENDING'"
+                        [disabled]="r.status !== 'PENDIENTE'"
                         matTooltip="Aprobar">
                   <mat-icon>check_circle</mat-icon>
                 </button>
                 <button mat-icon-button color="warn" 
                         (click)="rechazar(r)" 
-                        [disabled]="r.status !== 'PENDING'"
+                        [disabled]="r.status !== 'PENDIENTE'"
                         matTooltip="Rechazar">
                   <mat-icon>cancel</mat-icon>
                 </button>
                 <button mat-icon-button 
                         (click)="cancelar(r)" 
-                        [disabled]="r.status === 'CANCELLED'"
+                        [disabled]="r.status === 'CANCELADO'"
                         matTooltip="Cancelar">
                   <mat-icon>delete</mat-icon>
                 </button>

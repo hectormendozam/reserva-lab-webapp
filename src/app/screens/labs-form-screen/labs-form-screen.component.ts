@@ -23,11 +23,11 @@ export class LabsFormScreenComponent implements OnInit {
   ngOnInit(): void {
     this.formulario = this.fb.group({
       name: [null, Validators.required],
-      building: [null, Validators.required],
-      floor: [null, Validators.required],
-      capacity: [0, [Validators.required, Validators.min(1)]],
-      type: [null, Validators.required],
-      status: ['ACTIVE', Validators.required],
+      edificio: [null, Validators.required],
+      piso: [null, Validators.required],
+      capacidad: [0, [Validators.required, Validators.min(1)]],
+      tipo: [null, Validators.required],
+      status: ['ACTIVO', Validators.required],
     });
   }
 

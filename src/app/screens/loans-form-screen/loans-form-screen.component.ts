@@ -28,10 +28,10 @@ export class LoansFormScreenComponent implements OnInit {
 
   ngOnInit(): void {
     this.formulario = this.fb.group({
-      equipment: [null, Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]],
-      loan_date: [null, Validators.required],
-      due_date: [null, Validators.required],
+      equipo: [null, Validators.required],
+      cantidad: [1, [Validators.required, Validators.min(1)]],
+      fechaPrestamo: [null, Validators.required],
+      fechaDevolucion: [null, Validators.required],
     });
 
     this.cargarEquipos();
@@ -44,9 +44,9 @@ export class LoansFormScreenComponent implements OnInit {
         // Si no hay equipos, usar datos de ejemplo
         if (this.equipos.length === 0) {
           this.equipos = [
-            { id: 1, name: 'Proyector Epson', description: 'Proyector multimedia', inventory_number: 'PROJ-001', total_quantity: 10, available_quantity: 8, status: 'AVAILABLE' },
-            { id: 2, name: 'Laptop HP', description: 'Laptop para préstamo', inventory_number: 'LAP-001', total_quantity: 15, available_quantity: 12, status: 'AVAILABLE' },
-            { id: 3, name: 'Osciloscopio', description: 'Osciloscopio digital', inventory_number: 'OSC-001', total_quantity: 5, available_quantity: 4, status: 'AVAILABLE' }
+            { id: 1, name: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
+            { id: 2, name: 'Laptop HP', descripcion: 'Laptop para préstamo', numeroInventario: 'LAP-001', cantidadTotal: 15, cantidadDisponible: 12, status: 'DISPONIBLE' },
+            { id: 3, name: 'Osciloscopio', descripcion: 'Osciloscopio digital', numeroInventario: 'OSC-001', cantidadTotal: 5, cantidadDisponible: 4, status: 'DISPONIBLE' }
           ];
           console.warn('No hay equipos en el backend, usando datos de ejemplo');
         }
@@ -54,9 +54,9 @@ export class LoansFormScreenComponent implements OnInit {
       error: () => {
         // En caso de error, también usar datos de ejemplo
         this.equipos = [
-          { id: 1, name: 'Proyector Epson', description: 'Proyector multimedia', inventory_number: 'PROJ-001', total_quantity: 10, available_quantity: 8, status: 'AVAILABLE' },
-          { id: 2, name: 'Laptop HP', description: 'Laptop para préstamo', inventory_number: 'LAP-001', total_quantity: 15, available_quantity: 12, status: 'AVAILABLE' },
-          { id: 3, name: 'Osciloscopio', description: 'Osciloscopio digital', inventory_number: 'OSC-001', total_quantity: 5, available_quantity: 4, status: 'AVAILABLE' }
+          { id: 1, name: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
+          { id: 2, name: 'Laptop HP', descripcion: 'Laptop para préstamo', numeroInventario: 'LAP-001', cantidadTotal: 15, cantidadDisponible: 12, status: 'DISPONIBLE' },
+          { id: 3, name: 'Osciloscopio', descripcion: 'Osciloscopio digital', numeroInventario: 'OSC-001', cantidadTotal: 5, cantidadDisponible: 4, status: 'DISPONIBLE' }
         ];
         this.error = 'No se pudieron cargar los equipos del servidor. Mostrando datos de ejemplo.';
         console.warn('Error al cargar equipos, usando datos de ejemplo');
@@ -76,10 +76,10 @@ export class LoansFormScreenComponent implements OnInit {
     const valores = this.formulario.value;
     const nuevoPrestamo: Partial<Loan> = {
       user: this.usuarioIdDemo,
-      equipment: valores.equipment,
-      quantity: valores.quantity,
-      loan_date: valores.loan_date,
-      due_date: valores.due_date,
+      equipo: valores.equipo,
+      cantidad: valores.cantidad,
+      fechaPrestamo: valores.fechaPrestamo,
+      fechaDevolucion: valores.fechaDevolucion,
     };
 
     this.loansService.create(nuevoPrestamo).subscribe({

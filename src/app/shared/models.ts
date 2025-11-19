@@ -1,4 +1,4 @@
-export type UserRole = 'ADMIN' | 'TECH' | 'STUDENT';
+export type UserRole = 'ADMIN' | 'TECH' | 'ESTUDIANTE';
 
 export interface User {
   id: number;
@@ -9,53 +9,52 @@ export interface User {
   role: UserRole;
 }
 
-export type LabStatus = 'ACTIVE' | 'INACTIVE' | 'MAINTENANCE';
+export type LabStatus = 'ACTIVO' | 'INACTIVO' | 'MANTENIMIENTO';
 
 export interface Lab {
   id: number;
   name: string;
-  building: string;
-  floor: string;
-  capacity: number;
-  type: 'COMPUTO' | 'ELECTRONICA' | 'BIOLOGIA' | string;
+  edificio: string;
+  piso: string;
+  capacidad: number;
+  tipo: 'COMPUTO' | 'ELECTRONICA' | 'BIOLOGIA' | string;
   status: LabStatus;
 }
 
-export type EquipmentStatus = 'AVAILABLE' | 'MAINTENANCE';
+export type EquipmentStatus = 'DISPONIBLE' | 'MANTENIMIENTO';
 
 export interface Equipment {
   id: number;
   name: string;
-  description: string;
-  inventory_number: string;
-  total_quantity: number;
-  available_quantity: number;
+  descripcion: string;
+  numeroInventario: string;
+  cantidadTotal: number;
+  cantidadDisponible: number;
   status: EquipmentStatus;
   lab?: number; // Lab id opcional
 }
 
-export type ReservationStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+export type ReservationStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'CANCELADO';
 
 export interface Reservation {
   id: number;
   user: number; // User id
   lab: number; // Lab id
-  date: string; // ISO date
-  start_time: string; // HH:mm
-  end_time: string;   // HH:mm
-  reason: string;
+  fecha: string; // ISO date
+  horaInicio: string; // HH:mm
+  horaFin: string;   // HH:mm
+  motivo: string;
   status: ReservationStatus;
 }
 
-export type LoanStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'RETURNED' | 'DAMAGED';
-
+export type LoanStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'DEVUELTO' | 'DAÑADO';
 export interface Loan {
   id: number;
   user: number; // User id
-  equipment: number; // Equipment id
-  quantity: number;
-  loan_date: string;    // ISO date
-  due_date: string;     // ISO date
-  return_date?: string; // ISO date opcional
+  equipo: number; // Equipment id
+  cantidad: number;
+  fechaPrestamo: string;    // ISO date
+  fechaVencimiento: string;     // ISO date
+  fechaDevolucion?: string; // ISO date opcional
   status: LoanStatus;
 }

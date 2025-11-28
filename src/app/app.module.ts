@@ -46,6 +46,8 @@ import { LabsFormScreenComponent } from './screens/labs-form-screen/labs-form-sc
 import { EquipmentListScreenComponent } from './screens/equipment-list-screen/equipment-list-screen.component';
 import { EquipmentFormScreenComponent } from './screens/equipment-form-screen/equipment-form-screen.component';
 import { ReportsScreenComponent } from './screens/reports-screen/reports-screen.component';
+import { LandingScreenComponent } from './screens/landing-screen/landing-screen.component';
+import { EliminarLabComponent } from './modals/eliminar-lab/eliminar-lab.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,9 @@ import { ReportsScreenComponent } from './screens/reports-screen/reports-screen.
     LabsFormScreenComponent,
     EquipmentListScreenComponent,
     EquipmentFormScreenComponent,
-    ReportsScreenComponent
+    ReportsScreenComponent,
+    LandingScreenComponent,
+    EliminarLabComponent
   ],
   imports: [
     BrowserModule,

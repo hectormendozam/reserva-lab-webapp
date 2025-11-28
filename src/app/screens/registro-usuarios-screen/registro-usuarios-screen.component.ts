@@ -69,7 +69,7 @@ export class RegistroUsuariosScreenComponent implements OnInit{
     let role = '';
     if(this.user.tipo_usuario === 'administrador'){
       role = 'ADMIN';
-    } else if(this.user.tipo_usuario === 'alumno'){
+    } else if(this.user.tipo_usuario === 'estudiante'){
       role = 'ESTUDIANTE';
     } else if(this.user.tipo_usuario === 'tecnico'){
       role = 'TECH';
@@ -84,7 +84,6 @@ export class RegistroUsuariosScreenComponent implements OnInit{
       matricula: this.user.matricula || undefined,
       carrera: this.user.carrera || undefined,
       departamento: this.user.departamento || undefined,
-      telefono: this.user.telefono || undefined
     };
 
     this.authService.register(registerData).subscribe(

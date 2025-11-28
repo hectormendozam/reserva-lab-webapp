@@ -26,13 +26,24 @@ export class LoansListScreenComponent implements OnInit {
   cargarPrestamos(): void {
     this.cargando = true;
     this.error = undefined;
+    console.log('Iniciando carga de préstamos...');
     this.loansService.list().subscribe({
       next: (data) => {
+        console.log('Préstamos recibidos del backend:', data);
         this.prestamos = data;
         this.cargando = false;
+        if (data.length === 0) {
+          console.warn('La lista de préstamos está vacía');
+        }
       },
-      error: () => {
-        this.error = 'No se pudieron cargar los préstamos.';
+      error: (err) => {
+        console.error('Error al cargar préstamos:', err);
+        console.error('Status:', err.status);
+        console.error('Message:', err.message);
+        if (err.error) {
+          console.error('Error body:', err.error);
+        }
+        this.error = `No se pudieron cargar los préstamos. ${err.status ? `(Error ${err.status})` : ''}`;
         this.cargando = false;
       },
     });

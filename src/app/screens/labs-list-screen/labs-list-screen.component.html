@@ -68,6 +68,8 @@
               </td>
             </ng-container>
 
+            <td class="td-editar"><i class="bi bi-pencil-square" (click)="goEditar(admin.id)"></i></td>
+            <td class="td-eliminar"><i class="bi bi-trash3-fill" (click)="delete(admin.id)"></i></td>
             <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
             <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
           </table>

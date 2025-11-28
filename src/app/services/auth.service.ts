@@ -21,10 +21,9 @@ export interface RegisterRequest {
   email: string;
   password: string;
   role: string;
-  student_id?: string;
-  career?: string;
-  department?: string;
-  phone?: string;
+  matricula?: string;
+  carrera?: string;
+  departamento?: string;
 }
 
 @Injectable({ providedIn: 'root' })

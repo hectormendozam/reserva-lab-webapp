@@ -12,7 +12,7 @@ export class EquipmentListScreenComponent implements OnInit {
   equipos: Equipment[] = [];
   cargando = false;
   error?: string;
-  columnasTabla: string[] = ['id', 'nombre', 'descripcion', 'numeroInventario', 'cantidadTotal', 'cantidadDisponible', 'status'];
+  columnasTabla: string[] = ['id', 'name', 'descripcion', 'numeroInventario', 'cantidadTotal', 'cantidadDisponible', 'status'];
 
   constructor(
     private equipmentService: EquipmentService,
@@ -26,13 +26,24 @@ export class EquipmentListScreenComponent implements OnInit {
   cargarEquipos(): void {
     this.cargando = true;
     this.error = undefined;
+    console.log('Iniciando carga de equipos...');
     this.equipmentService.list().subscribe({
       next: (data) => {
+        console.log('Equipos recibidos del backend:', data);
         this.equipos = data;
         this.cargando = false;
+        if (data.length === 0) {
+          console.warn('La lista de equipos está vacía');
+        }
       },
-      error: () => {
-        this.error = 'No se pudieron cargar los equipos.';
+      error: (err) => {
+        console.error('Error al cargar equipos:', err);
+        console.error('Status:', err.status);
+        console.error('Message:', err.message);
+        if (err.error) {
+          console.error('Error body:', err.error);
+        }
+        this.error = `No se pudieron cargar los equipos. ${err.status ? `(Error ${err.status})` : ''}`;
         this.cargando = false;
       },
     });

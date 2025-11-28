@@ -39,7 +39,7 @@ export class ReservationsFormScreenComponent implements OnInit {
   }
 
   cargarLaboratorios(): void {
-    this.labsService.list({ status: 'ACTIVE' }).subscribe({
+    this.labsService.list({ status: 'ACTIVO' }).subscribe({
       next: (labs) => {
         this.laboratorios = labs;
         // Si no hay laboratorios, usar datos de ejemplo
@@ -51,8 +51,9 @@ export class ReservationsFormScreenComponent implements OnInit {
           ];
           console.warn('No hay laboratorios en el backend, usando datos de ejemplo');
         }
+        console.log('Laboratorios cargados:', this.laboratorios);
       },
-      error: () => {
+      error: (err) => {
         // En caso de error, también usar datos de ejemplo
         this.laboratorios = [
           { id: 1, name: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
@@ -60,7 +61,7 @@ export class ReservationsFormScreenComponent implements OnInit {
           { id: 3, name: 'Laboratorio de Cómputo 2', edificio: 'Edificio C', piso: '1', capacidad: 35, tipo: 'COMPUTO', status: 'ACTIVO' }
         ];
         this.error = 'No se pudieron cargar los laboratorios del servidor. Mostrando datos de ejemplo.';
-        console.warn('Error al cargar laboratorios, usando datos de ejemplo');
+        console.error('Error al cargar laboratorios:', err);
       },
     });
   }
@@ -84,14 +85,17 @@ export class ReservationsFormScreenComponent implements OnInit {
       motivo: valores.motivo,
     };
 
+    console.log('Enviando reserva:', nuevaReserva);
     this.reservationsService.create(nuevaReserva).subscribe({
       next: () => {
         this.guardando = false;
+        console.log('Reserva creada exitosamente');
         this.router.navigate(['/reservas']);
       },
-      error: () => {
+      error: (err) => {
         this.guardando = false;
         this.error = 'No se pudo crear la reserva.';
+        console.error('Error al crear reserva:', err);
       },
     });
   }

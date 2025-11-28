@@ -25,7 +25,7 @@ export class EquipmentFormScreenComponent implements OnInit {
 
   ngOnInit(): void {
     this.formulario = this.fb.group({
-      nombre: [null, Validators.required],
+      name: [null, Validators.required],
       descripcion: [null, Validators.required],
       numeroInventario: [null, Validators.required],
       cantidadTotal: [1, [Validators.required, Validators.min(1)]],
@@ -39,8 +39,14 @@ export class EquipmentFormScreenComponent implements OnInit {
 
   cargarLaboratorios(): void {
     this.labsService.list({ status: 'ACTIVO' }).subscribe({
-      next: (labs) => (this.laboratorios = labs),
-      error: () => (this.error = 'No se pudieron cargar los laboratorios.'),
+      next: (labs) => {
+        this.laboratorios = labs;
+        console.log('Laboratorios cargados:', this.laboratorios);
+      },
+      error: (err) => {
+        this.error = 'No se pudieron cargar los laboratorios.';
+        console.error('Error al cargar laboratorios:', err);
+      },
     });
   }
 

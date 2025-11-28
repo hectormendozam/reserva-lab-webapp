@@ -38,7 +38,7 @@ export class LoansFormScreenComponent implements OnInit {
   }
 
   cargarEquipos(): void {
-    this.equipmentService.list({ status: 'AVAILABLE' }).subscribe({
+    this.equipmentService.list({ status: 'DISPONIBLE' }).subscribe({
       next: (equipos) => {
         this.equipos = equipos;
         // Si no hay equipos, usar datos de ejemplo
@@ -50,8 +50,9 @@ export class LoansFormScreenComponent implements OnInit {
           ];
           console.warn('No hay equipos en el backend, usando datos de ejemplo');
         }
+        console.log('Equipos cargados:', this.equipos);
       },
-      error: () => {
+      error: (err) => {
         // En caso de error, también usar datos de ejemplo
         this.equipos = [
           { id: 1, name: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
@@ -59,7 +60,7 @@ export class LoansFormScreenComponent implements OnInit {
           { id: 3, name: 'Osciloscopio', descripcion: 'Osciloscopio digital', numeroInventario: 'OSC-001', cantidadTotal: 5, cantidadDisponible: 4, status: 'DISPONIBLE' }
         ];
         this.error = 'No se pudieron cargar los equipos del servidor. Mostrando datos de ejemplo.';
-        console.warn('Error al cargar equipos, usando datos de ejemplo');
+        console.error('Error al cargar equipos:', err);
       },
     });
   }
@@ -82,14 +83,17 @@ export class LoansFormScreenComponent implements OnInit {
       fechaDevolucion: valores.fechaDevolucion,
     };
 
+    console.log('Enviando préstamo:', nuevoPrestamo);
     this.loansService.create(nuevoPrestamo).subscribe({
       next: () => {
         this.guardando = false;
+        console.log('Préstamo creado exitosamente');
         this.router.navigate(['/prestamos']);
       },
-      error: () => {
+      error: (err) => {
         this.guardando = false;
         this.error = 'No se pudo crear el préstamo.';
+        console.error('Error al crear préstamo:', err);
       },
     });
   }

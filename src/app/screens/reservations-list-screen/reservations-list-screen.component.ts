@@ -26,13 +26,24 @@ export class ReservationsListScreenComponent implements OnInit {
   cargarReservas(): void {
     this.cargando = true;
     this.error = undefined;
+    console.log('Iniciando carga de reservas...');
     this.reservationsService.list().subscribe({
       next: (data) => {
+        console.log('Reservas recibidas del backend:', data);
         this.reservas = data;
         this.cargando = false;
+        if (data.length === 0) {
+          console.warn('La lista de reservas está vacía');
+        }
       },
-      error: () => {
-        this.error = 'No se pudieron cargar las reservas.';
+      error: (err) => {
+        console.error('Error al cargar reservas:', err);
+        console.error('Status:', err.status);
+        console.error('Message:', err.message);
+        if (err.error) {
+          console.error('Error body:', err.error);
+        }
+        this.error = `No se pudieron cargar las reservas. ${err.status ? `(Error ${err.status})` : ''}`;
         this.cargando = false;
       },
     });

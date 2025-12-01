@@ -18,6 +18,9 @@
                 <mat-error *ngIf="formulario.get('name')?.hasError('required')">
                   El nombre es obligatorio.
                 </mat-error>
+                <mat-error *ngIf="formulario.get('name')?.hasError('minlength')">
+                  El nombre debe tener al menos 3 caracteres.
+                </mat-error>
               </mat-form-field>
             </div>
 
@@ -39,6 +42,9 @@
                 <input matInput formControlName="numeroInventario">
                 <mat-error *ngIf="formulario.get('numeroInventario')?.hasError('required')">
                   El número de inventario es obligatorio.
+                </mat-error>
+                <mat-error *ngIf="formulario.get('numeroInventario')?.hasError('minlength')">
+                  El número de inventario debe tener al menos 3 caracteres.
                 </mat-error>
               </mat-form-field>
             </div>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Equipment, Lab } from '../../shared/models';
 import { EquipmentService } from '../../services/equipment.service';
 import { LabsService } from '../../services/labs.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-equipment-form-screen',
@@ -15,19 +16,29 @@ export class EquipmentFormScreenComponent implements OnInit {
   laboratorios: Lab[] = [];
   guardando = false;
   error?: string;
+  editMode: boolean = false;
+  equipmentId?: number;
 
   constructor(
     private fb: FormBuilder,
     private equipmentService: EquipmentService,
     private labsService: LabsService,
+    private authService: AuthService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
+    // Verificar que es admin
+    const user = this.authService.getAuthenticatedUser();
+    if (user?.role !== 'ADMIN') {
+      this.router.navigate(['/']);
+      return;
+    }
+
     this.formulario = this.fb.group({
-      name: [null, Validators.required],
+      name: [null, [Validators.required, Validators.minLength(3)]],
       descripcion: [null, Validators.required],
-      numeroInventario: [null, Validators.required],
+      numeroInventario: [null, [Validators.required, Validators.minLength(3)]],
       cantidadTotal: [1, [Validators.required, Validators.min(1)]],
       cantidadDisponible: [1, [Validators.required, Validators.min(0)]],
       status: ['DISPONIBLE', Validators.required],
@@ -35,6 +46,28 @@ export class EquipmentFormScreenComponent implements OnInit {
     });
 
     this.cargarLaboratorios();
+
+    // Revisar si se pasó un equipo por navigation state (para edición/readonly)
+    const navState: any = history.state || {};
+    if (navState && navState.equipment) {
+      const eq = navState.equipment as Partial<Equipment>;
+      this.editMode = !!eq.id;
+      this.equipmentId = eq.id;
+
+      this.formulario.patchValue({
+        name: eq.name,
+        descripcion: eq.descripcion,
+        numeroInventario: eq.numeroInventario,
+        cantidadTotal: eq.cantidadTotal,
+        cantidadDisponible: eq.cantidadDisponible,
+        status: eq.status,
+        lab: (eq.lab && typeof eq.lab === 'object') ? (eq.lab as any).id : eq.lab
+      });
+
+      if (navState.readonly) {
+        this.formulario.disable();
+      }
+    }
   }
 
   cargarLaboratorios(): void {
@@ -61,14 +94,21 @@ export class EquipmentFormScreenComponent implements OnInit {
 
     const valores = this.formulario.value as Partial<Equipment>;
 
-    this.equipmentService.create(valores).subscribe({
+    const request = this.editMode && this.equipmentId
+      ? this.equipmentService.update(this.equipmentId, valores)
+      : this.equipmentService.create(valores);
+
+    request.subscribe({
       next: () => {
         this.guardando = false;
         this.router.navigate(['/equipos']);
       },
-      error: () => {
+      error: (err) => {
         this.guardando = false;
-        this.error = 'No se pudo crear el equipo.';
+        this.error = this.editMode 
+          ? 'No se pudo actualizar el equipo.'
+          : 'No se pudo crear el equipo.';
+        console.error('Error al guardar equipo:', err);
       },
     });
   }

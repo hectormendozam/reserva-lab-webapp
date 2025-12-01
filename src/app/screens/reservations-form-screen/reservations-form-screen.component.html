@@ -34,6 +34,9 @@
                 <mat-error *ngIf="formulario.get('fecha')?.hasError('required')">
                   La fecha es obligatoria.
                 </mat-error>
+                <mat-error *ngIf="formulario.get('fecha')?.hasError('pastDate')">
+                  No puedes reservar para una fecha pasada.
+                </mat-error>
               </mat-form-field>
             </div>
 
@@ -55,6 +58,9 @@
                 <input matInput type="time" formControlName="horaFin">
                 <mat-error *ngIf="formulario.get('horaFin')?.hasError('required')">
                   La hora de fin es obligatoria.
+                </mat-error>
+                <mat-error *ngIf="formulario.hasError('horasIncoherentes')">
+                  La hora de fin debe ser posterior a la hora de inicio.
                 </mat-error>
               </mat-form-field>
             </div>

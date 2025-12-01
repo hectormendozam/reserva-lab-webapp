@@ -1,57 +1,140 @@
-<!-- src/app/screens/landing/landing.component.html -->
-<div class="container-fluid bg-light min-vh-100 d-flex flex-column justify-content-center align-items-center text-center">
-    <div class="py-5">
-    <h1 class="display-4 fw-bold text-primary">ReservaLab</h1>
-    <p class="lead text-secondary mt-3 mb-4">
-        Administra laboratorios, equipos y reservas fácilmente desde una sola plataforma.
-    </p>
-    <a routerLink="/login" class="btn btn-primary btn-lg me-2 px-4">Iniciar Sesión</a>
-    <a routerLink="/register" class="btn btn-outline-primary btn-lg px-4">Registrarse</a>
-</div>
+<!-- Landing Page -->
+<div class="landing-wrapper">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container py-5">
+      <div class="row align-items-center min-vh-100">
+        <div class="col-lg-6 text-center text-lg-start">
+          <h1 class="display-4 fw-bold text-primary mb-3">ReservaLab</h1>
+          <p class="lead text-muted mb-4">
+            Administra laboratorios, equipos y reservas fácilmente desde una sola plataforma. 
+            Simplifica la gestión de tus espacios y recursos.
+          </p>
+          <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+            <a routerLink="/auth/login" class="btn btn-primary btn-lg px-5">
+              <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+            </a>
+            <a routerLink="/auth/register" class="btn btn-outline-primary btn-lg px-5">
+              <i class="bi bi-person-plus me-2"></i>Registrarse
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 mt-5 mt-lg-0">
+          <div class="illustration">
+            <i class="bi bi-building text-primary" style="font-size: 150px; opacity: 0.1;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100 border-0">
-        <div class="card-body">
-            <i class="bi bi-calendar-check fs-1 text-primary"></i>
-            <h5 class="card-title mt-3">Reservas Simples</h5>
-            <p class="card-text text-muted">
-                Realiza y gestiona tus reservas de laboratorios de manera rápida e intuitiva.
-            </p>
-        </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100 border-0">
-        <div class="card-body">
-            <i class="bi bi-cpu fs-1 text-primary"></i>
-            <h5 class="card-title mt-3">Control de Equipos</h5>
-            <p class="card-text text-muted">
-                Mantén un registro actualizado del estado y disponibilidad de los equipos.
-            </p>
-        </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100 border-0">
-        <div class="card-body">
-            <i class="bi bi-bar-chart-line fs-1 text-primary"></i>
-            <h5 class="card-title mt-3">Reportes Detallados</h5>
-            <p class="card-text text-muted">
-                Obtén estadísticas e informes para una mejor toma de decisiones.
-            </p>
-        </div>
-        </div>
-    </div>
-    </div>
-</div>
-
-<div class="bg-primary text-white py-5 w-100">
+  <!-- Features Section -->
+  <section class="features-section py-5 bg-light">
     <div class="container">
-        <h2 class="fw-bold">Comienza a optimizar tus reservas hoy</h2>
-        <p class="mb-4">Únete y descubre cómo simplificar la gestión de laboratorios.</p>
-        <a routerLink="/register" class="btn btn-light btn-lg px-4">Crear una cuenta</a>
+      <h2 class="text-center fw-bold mb-5">Características Principales</h2>
+      <div class="row g-4">
+        <!-- Card 1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon mb-3">
+              <i class="bi bi-calendar-check text-primary"></i>
+            </div>
+            <h5 class="fw-bold mb-2">Reservas Simples</h5>
+            <p class="text-muted">
+              Realiza y gestiona tus reservas de laboratorios de manera rápida e intuitiva. 
+              Consulta disponibilidad en tiempo real.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon mb-3">
+              <i class="bi bi-cpu text-primary"></i>
+            </div>
+            <h5 class="fw-bold mb-2">Control de Equipos</h5>
+            <p class="text-muted">
+              Mantén un registro actualizado del estado y disponibilidad de los equipos. 
+              Gestiona inventario sin complicaciones.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon mb-3">
+              <i class="bi bi-bar-chart-line text-primary"></i>
+            </div>
+            <h5 class="fw-bold mb-2">Reportes Detallados</h5>
+            <p class="text-muted">
+              Obtén estadísticas e informes para una mejor toma de decisiones. 
+              Analiza tendencias y patrones de uso.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon mb-3">
+              <i class="bi bi-shield-check text-primary"></i>
+            </div>
+            <h5 class="fw-bold mb-2">Seguridad</h5>
+            <p class="text-muted">
+              Tus datos están protegidos con autenticación segura. 
+              Acceso controlado según roles y permisos.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon mb-3">
+              <i class="bi bi-lightning-charge text-primary"></i>
+            </div>
+            <h5 class="fw-bold mb-2">Fácil de Usar</h5>
+            <p class="text-muted">
+              Interfaz intuitiva y responsiva. Accede desde cualquier dispositivo en cualquier momento.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon mb-3">
+              <i class="bi bi-headset text-primary"></i>
+            </div>
+            <h5 class="fw-bold mb-2">Soporte</h5>
+            <p class="text-muted">
+              Estamos aquí para ayudarte. Obtén respuestas rápidas a tus preguntas.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section py-5 bg-primary text-white">
+    <div class="container text-center">
+      <h2 class="fw-bold mb-3">Comienza a Optimizar tus Reservas Hoy</h2>
+      <p class="lead mb-4">
+        Únete a cientos de instituciones que ya confían en ReservaLab para gestionar sus laboratorios y equipos.
+      </p>
+      <a routerLink="/auth/register" class="btn btn-light btn-lg px-5">
+        <i class="bi bi-person-check me-2"></i>Crear una Cuenta Gratis
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer bg-dark text-white text-center py-3">
+    <div class="container">
+      <p class="mb-0">&copy; 2025 ReservaLab. Todos los derechos reservados.</p>
+    </div>
+  </footer>
 </div>

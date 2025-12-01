@@ -18,6 +18,9 @@
                 <mat-error *ngIf="formulario.get('name')?.hasError('required')">
                   El nombre es obligatorio.
                 </mat-error>
+                <mat-error *ngIf="formulario.get('name')?.hasError('minlength')">
+                  El nombre debe tener al menos 3 caracteres.
+                </mat-error>
               </mat-form-field>
             </div>
 

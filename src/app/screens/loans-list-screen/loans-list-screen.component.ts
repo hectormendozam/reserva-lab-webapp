@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Loan, LoanStatus } from '../../shared/models';
+import { Prestamo, PrestamoStatus } from '../../shared/models';
 import { LoansService } from '../../services/loans.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-loans-list-screen',
@@ -9,17 +10,25 @@ import { LoansService } from '../../services/loans.service';
   styleUrls: ['./loans-list-screen.component.scss']
 })
 export class LoansListScreenComponent implements OnInit {
-  prestamos: Loan[] = [];
+  prestamos: Prestamo[] = [];
   cargando = false;
   error?: string;
-  columnasTabla: string[] = ['id', 'user', 'equipo', 'cantidad', 'fechaPrestamo', 'fechaDevolucion', 'status', 'acciones'];
+  columnasTabla: string[] = [];
+  isEstudiante = false;
 
   constructor(
     private loansService: LoansService,
     private router: Router,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
+    const user = this.authService.getAuthenticatedUser();
+    this.isEstudiante = !!user && user.role === 'ESTUDIANTE';
+    this.columnasTabla = ['id', 'usuario', 'equipo', 'cantidad', 'fechaPrestamo', 'fechaVencimiento', 'status'];
+    if (!this.isEstudiante) {
+      this.columnasTabla.push('acciones');
+    }
     this.cargarPrestamos();
   }
 
@@ -53,19 +62,40 @@ export class LoansListScreenComponent implements OnInit {
     this.router.navigate(['/prestamos/nuevo']);
   }
 
-  aprobar(prestamo: Loan): void {
-    this.loansService.approve(prestamo.id).subscribe(() => this.cargarPrestamos());
+  aprobar(prestamo: Prestamo): void {
+    this.loansService.approve(prestamo.id).subscribe({
+      next: () => {
+        console.log('Préstamo aprobado:', prestamo.id);
+        this.cargarPrestamos();
+      },
+      error: (err) => {
+        console.error('Error al aprobar préstamo:', err);
+        alert('No se pudo aprobar el préstamo. ' + (err?.error?.detail || err.message || ''));
+      }
+    });
   }
 
-  rechazar(prestamo: Loan): void {
-    this.loansService.reject(prestamo.id).subscribe(() => this.cargarPrestamos());
+  rechazar(prestamo: Prestamo): void {
+    this.loansService.reject(prestamo.id).subscribe({
+      next: () => this.cargarPrestamos(),
+      error: (err) => {
+        console.error('Error al rechazar préstamo:', err);
+        alert('No se pudo rechazar el préstamo. ' + (err?.error?.detail || err.message || ''));
+      }
+    });
   }
 
-  devolver(prestamo: Loan, danado: boolean = false): void {
-    this.loansService.return(prestamo.id, danado).subscribe(() => this.cargarPrestamos());
+  devolver(prestamo: Prestamo, danado: boolean = false): void {
+    this.loansService.return(prestamo.id, danado).subscribe({
+      next: () => this.cargarPrestamos(),
+      error: (err) => {
+        console.error('Error al devolver préstamo:', err);
+        alert('No se pudo marcar como devuelto/dañado. ' + (err?.error?.detail || err.message || ''));
+      }
+    });
   }
 
-  traducirEstado(estado: LoanStatus): string {
+  traducirEstado(estado: PrestamoStatus): string {
     switch (estado) {
       case 'PENDIENTE':
         return 'Pendiente';
@@ -76,7 +106,7 @@ export class LoansListScreenComponent implements OnInit {
       case 'DEVUELTO':
         return 'Devuelto';
       case 'DAÑADO':
-        return 'Dañado';
+        return 'Dañados';
       default:
         return estado;
     }

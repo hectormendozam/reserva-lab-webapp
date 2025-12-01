@@ -1,0 +1,88 @@
+.wrapper{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.section-registro{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header-registro{
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.body-registro{
+  width: 100vw;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.img-slider{
+  width: 900px;
+  height: 630px;
+}
+
+//Radio buttons
+.title-user{
+  font-size: 28px;
+  text-align: center;
+  font-family: Nexa-Bold;
+  letter-spacing: 2px;
+  color: #231F20;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+::ng-deep .mat-radio-button.mat-radio-checked .mat-radio-outer-circle{
+  border-color: #E84150 !important;
+}
+
+::ng-deep .mat-radio-button.mat-radio-checked .mat-radio-inner-circle{
+  background-color: #E84150 !important;
+}
+
+::ng-deep .mat-radio-ripple .mat-ripple-element{
+  background-color: #E84150 !important;
+}
+
+::ng-deep .mat-radio-button:not(.mat-radio-disabled).mat-radio-checked .mat-radio-label-content{
+  color: #000 !important;
+}
+
+.forms-registro{
+  width: 100%;
+  padding: 20px;
+}
+
+.container{
+  max-width: 700px;
+}
+
+::ng-deep .mat-form-field-label{
+  color: #000 !important;
+}
+
+::ng-deep .mat-input-element:disabled {
+  color: #999 !important;
+}
+
+::ng-deep .mat-form-field-disabled .mat-form-field-label {
+  color: #999 !important;
+}

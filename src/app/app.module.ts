@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginScreenComponent } from './screens/login-screen/login-screen.component';
 import { RegistroUsuariosScreenComponent } from './screens/registro-usuarios-screen/registro-usuarios-screen.component';
+import { EditUsuarioScreenComponent } from './screens/edit-usuario-screen/edit-usuario-screen.component';
 //Elementos de angular material
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -47,13 +48,23 @@ import { EquipmentListScreenComponent } from './screens/equipment-list-screen/eq
 import { EquipmentFormScreenComponent } from './screens/equipment-form-screen/equipment-form-screen.component';
 import { ReportsScreenComponent } from './screens/reports-screen/reports-screen.component';
 import { LandingScreenComponent } from './screens/landing-screen/landing-screen.component';
-import { EliminarLabComponent } from './modals/eliminar-lab/eliminar-lab.component';
+import { EliminarLabComponent } from './modals/eliminar-lab-modal/eliminar-lab.component';
+import { ProfileScreenComponent } from './screens/profile-screen/profile-screen.component';
+import { UsersListScreenComponent } from './screens/users-list-screen/users-list-screen.component';
+import { FooterComponent } from './partials/footer/footer.component';
+import { EliminarEquipoModalComponent } from './modals/eliminar-equipo-modal/eliminar-equipo-modal.component';
+import { CancelarReservaModalComponent } from './modals/cancelar-reserva-modal/cancelar-reserva-modal.component';
+import { ConfirmReservationModalComponent } from './modals/confirm-reservation-modal/confirm-reservation-modal.component';
+import { ConfirmLoanModalComponent } from './modals/confirm-loan-modal/confirm-loan-modal.component';
+import { ReturnEquipmentModalComponent } from './modals/return-equipment-modal/return-equipment-modal.component';
+import { IncidentReportModalComponent } from './modals/incident-report-modal/incident-report-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginScreenComponent,
     RegistroUsuariosScreenComponent,
+    EditUsuarioScreenComponent,
     NavbarComponent,
     EliminarUserModalComponent,
     ReservationsListScreenComponent,
@@ -66,7 +77,16 @@ import { EliminarLabComponent } from './modals/eliminar-lab/eliminar-lab.compone
     EquipmentFormScreenComponent,
     ReportsScreenComponent,
     LandingScreenComponent,
-    EliminarLabComponent
+    EliminarLabComponent,
+    ProfileScreenComponent,
+    UsersListScreenComponent,
+    FooterComponent,
+    EliminarEquipoModalComponent,
+    CancelarReservaModalComponent,
+    ConfirmReservationModalComponent,
+    ConfirmLoanModalComponent,
+    ReturnEquipmentModalComponent,
+    IncidentReportModalComponent
   ],
   imports: [
     BrowserModule,

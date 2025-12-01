@@ -3,6 +3,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { passwordStrengthValidator } from '../../shared/validators';
 
 @Component({
   selector: 'app-registro-usuarios-screen',
@@ -20,7 +21,7 @@ export class RegistroUsuariosScreenComponent implements OnInit{
   //Banderas para el tipo de usuario
   public isAdmin:boolean = false;
   public isAlumno:boolean = false;
-  public isMaestro:boolean = false;
+  public isTecnico:boolean = false;
   public editar: boolean = false;
   public tipo_user:string = "";
   //Info del usuario
@@ -65,11 +66,40 @@ export class RegistroUsuariosScreenComponent implements OnInit{
       return;
     }
 
+    // Validar campos requeridos
+    if(!this.user.first_name || !this.user.last_name) {
+      alert("Nombre y apellido son obligatorios");
+      return;
+    }
+
+    if(!this.user.email) {
+      alert("El correo es obligatorio");
+      return;
+    }
+
+    if(!this.user.password) {
+      alert("La contraseña es obligatoria");
+      return;
+    }
+
+    // Validar contraseña fuerte
+    const passwordValidation = this.validatePasswordStrength(this.user.password);
+    if(!passwordValidation.valid) {
+      alert(passwordValidation.message);
+      return;
+    }
+
+    // Validar matrícula para alumnos
+    if(this.user.tipo_usuario === 'alumno' && !this.user.matricula) {
+      alert("La matrícula es obligatoria para estudiantes");
+      return;
+    }
+
     // Mapear tipo_usuario a role según el modelo del backend
     let role = '';
     if(this.user.tipo_usuario === 'administrador'){
       role = 'ADMIN';
-    } else if(this.user.tipo_usuario === 'estudiante'){
+    } else if(this.user.tipo_usuario === 'alumno'){
       role = 'ESTUDIANTE';
     } else if(this.user.tipo_usuario === 'tecnico'){
       role = 'TECH';
@@ -98,6 +128,29 @@ export class RegistroUsuariosScreenComponent implements OnInit{
     );
   }
 
+  /**
+   * Valida que la contraseña cumpla con los requisitos
+   */
+  private validatePasswordStrength(password: string): { valid: boolean; message: string } {
+    if (password.length < 8) {
+      return { valid: false, message: 'La contraseña debe tener al menos 8 caracteres.' };
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      return { valid: false, message: 'La contraseña debe contener al menos una mayúscula.' };
+    }
+    
+    if (!/[a-z]/.test(password)) {
+      return { valid: false, message: 'La contraseña debe contener al menos una minúscula.' };
+    }
+    
+    if (!/[0-9]/.test(password)) {
+      return { valid: false, message: 'La contraseña debe contener al menos un número.' };
+    }
+    
+    return { valid: true, message: '' };
+  }
+
   public goBack(){
     this.location.back();
   }
@@ -107,17 +160,17 @@ export class RegistroUsuariosScreenComponent implements OnInit{
       this.isAdmin = true;
       this.tipo_user = "administrador"
       this.isAlumno = false;
-      this.isMaestro = false;
+      this.isTecnico = false;
     }else if (event.value == "alumno"){
       this.isAdmin = false;
       this.isAlumno = true;
       this.tipo_user = "alumno"
-      this.isMaestro = false;
-    }else if (event.value == "maestro"){
+      this.isTecnico = false;
+    }else if (event.value == "tecnico"){
       this.isAdmin = false;
       this.isAlumno = false;
-      this.isMaestro = true;
-      this.tipo_user = "maestro"
+      this.isTecnico = true;
+      this.tipo_user = "tecnico"
     }
   }
 }

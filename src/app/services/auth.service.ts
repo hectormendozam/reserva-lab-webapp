@@ -43,4 +43,22 @@ export class AuthService {
   me(): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/me/`);
   }
+
+
+  getAuthenticatedUser(): User | null {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (!userStr) return null;
+      return JSON.parse(userStr) as User;
+    } catch (error) {
+      console.error('Error al obtener usuario autenticado:', error);
+      return null;
+    }
+  }
+
+
+  getAuthenticatedUserId(): number {
+    const user = this.getAuthenticatedUser();
+    return user?.id ?? 0;
+  }
 }

@@ -1,7 +1,6 @@
 <div class="wrapper">
   <div class="section-registro">
     <div class="header-registro">
-      <app-navbar [tipo]="tipo"></app-navbar>
     </div>
     <div class="body-registro">
       
@@ -57,6 +56,7 @@
                       <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Contraseña</mat-label>
                         <input matInput type="password" [(ngModel)]="user.password" name="password" required [disabled]="editar">
+                        <mat-hint>Mínimo 8 caracteres, con mayúscula, minúscula y número</mat-hint>
                       </mat-form-field>
                     </div>
                     
@@ -66,7 +66,8 @@
                     <div class="col-md-6 mb-3" *ngIf="isAlumno">
                       <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Matrícula</mat-label>
-                        <input matInput [(ngModel)]="user.matricula" name="matricula">
+                        <input matInput [(ngModel)]="user.matricula" name="matricula" required>
+                        <mat-error *ngIf="!user.matricula">La matrícula es obligatoria</mat-error>
                       </mat-form-field>
                     </div>
                     
@@ -79,18 +80,17 @@
                     </div>
                     
                     <!-- Campo para Técnico: Departamento -->
-                    <div class="col-md-6 mb-3" *ngIf="isMaestro">
+                    <div class="col-md-6 mb-3" *ngIf="isTecnico">
                       <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Departamento</mat-label>
                         <input matInput [(ngModel)]="user.departamento" name="departamento">
                       </mat-form-field>
                     </div>
-                    
-                    <!-- Campo para Técnico: Teléfono -->
-                    <div class="col-md-6 mb-3" *ngIf="isMaestro">
+
+                    <div class="col-md-6 mb-3" *ngIf="isTecnico">
                       <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Teléfono</mat-label>
-                        <input matInput [(ngModel)]="user.telefono" name="telefono">
+                        <mat-label>Num. Trabajador</mat-label>
+                        <input matInput [(ngModel)]="user.matricula" name="matricula">
                       </mat-form-field>
                     </div>
                     

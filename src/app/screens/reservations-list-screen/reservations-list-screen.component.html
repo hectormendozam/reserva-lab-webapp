@@ -29,15 +29,15 @@
             </ng-container>
 
             <!-- Columna Usuario -->
-            <ng-container matColumnDef="user">
+            <ng-container matColumnDef="usuario">
               <th mat-header-cell *matHeaderCellDef>Usuario</th>
-              <td mat-cell *matCellDef="let r">{{ r.user }}</td>
+              <td mat-cell *matCellDef="let r">{{ r.user?.first_name ? (r.user.first_name + ' ' + r.user.last_name) : (r.user?.email ? r.user.email : r.user) }}</td>
             </ng-container>
 
             <!-- Columna Laboratorio -->
-            <ng-container matColumnDef="lab">
+            <ng-container matColumnDef="laboratorio">
               <th mat-header-cell *matHeaderCellDef>Laboratorio</th>
-              <td mat-cell *matCellDef="let r">{{ r.lab }}</td>
+              <td mat-cell *matCellDef="let r">{{ r.lab?.name ? r.lab.name : r.lab }}</td>
             </ng-container>
 
             <!-- Columna Fecha -->
@@ -69,7 +69,7 @@
             </ng-container>
 
             <!-- Columna Acciones -->
-            <ng-container matColumnDef="acciones">
+            <ng-container *ngIf="!isEstudiante" matColumnDef="acciones">
               <th mat-header-cell *matHeaderCellDef>Acciones</th>
               <td mat-cell *matCellDef="let r">
                 <button mat-icon-button color="primary" 

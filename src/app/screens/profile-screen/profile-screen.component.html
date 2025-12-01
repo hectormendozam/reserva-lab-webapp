@@ -1,0 +1,167 @@
+<div class="wrapper">
+  <div class="section-profile">
+    <div class="header-profile">
+      <app-navbar [tipo]="'perfil'"></app-navbar>
+    </div>
+
+    <div class="body-profile p-4">
+      <div class="container">
+        <div class="encabezado mb-4">
+          <h1>Mi Perfil</h1>
+        </div>
+
+        <!-- Cargando -->
+        <div *ngIf="cargando" class="text-center">
+          <p>Cargando perfil...</p>
+        </div>
+
+        <!-- Error -->
+        <div *ngIf="error" class="alert alert-danger">
+          {{ error }}
+        </div>
+
+        <!-- Éxito -->
+        <div *ngIf="success" class="alert alert-success">
+          {{ success }}
+        </div>
+
+        <!-- Formulario -->
+        <div *ngIf="!cargando && usuario" class="profile-card">
+          <form [formGroup]="formulario" class="needs-validation">
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label for="first_name" class="form-label">Nombre <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                id="first_name"
+                formControlName="first_name"
+                [disabled]="!editMode"
+                [class.is-invalid]="editMode && formulario.get('first_name')?.hasError('required') && formulario.get('first_name')?.touched"
+              />
+              <div class="invalid-feedback d-block" *ngIf="editMode && formulario.get('first_name')?.hasError('required') && formulario.get('first_name')?.touched">
+                El nombre es obligatorio.
+              </div>
+              <div class="invalid-feedback d-block" *ngIf="editMode && formulario.get('first_name')?.hasError('minlength') && formulario.get('first_name')?.touched">
+                El nombre debe tener al menos 2 caracteres.
+              </div>
+            </div>
+
+            <!-- Apellido -->
+            <div class="mb-3">
+              <label for="last_name" class="form-label">Apellido <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                id="last_name"
+                formControlName="last_name"
+                [disabled]="!editMode"
+                [class.is-invalid]="editMode && formulario.get('last_name')?.hasError('required') && formulario.get('last_name')?.touched"
+              />
+              <div class="invalid-feedback d-block" *ngIf="editMode && formulario.get('last_name')?.hasError('required') && formulario.get('last_name')?.touched">
+                El apellido es obligatorio.
+              </div>
+              <div class="invalid-feedback d-block" *ngIf="editMode && formulario.get('last_name')?.hasError('minlength') && formulario.get('last_name')?.touched">
+                El apellido debe tener al menos 2 caracteres.
+              </div>
+            </div>
+
+            <!-- Email (no editable) -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email (No editable)</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                formControlName="email"
+                [disabled]="true"
+              />
+              <small class="form-text text-muted">El email es tu nombre de usuario y no puede ser modificado.</small>
+            </div>
+
+            <!-- Rol (no editable) -->
+            <div class="mb-3">
+              <label for="role" class="form-label">Rol</label>
+              <input
+                type="text"
+                class="form-control"
+                id="role"
+                formControlName="role"
+                [disabled]="true"
+              />
+              <small class="form-text text-muted" *ngIf="!isAdmin">El rol no puede ser modificado. Solo los administradores pueden cambiar roles.</small>
+            </div>
+
+            <!-- Matrícula (no editable, si existe) -->
+            <div *ngIf="usuario.role === 'ESTUDIANTE'" class="mb-3">
+              <label for="matricula" class="form-label">Matrícula</label>
+              <input
+                type="text"
+                class="form-control"
+                id="matricula"
+                formControlName="matricula"
+                [disabled]="true"
+              />
+            </div>
+
+            <!-- Departamento (editable si es ADMIN/TECH) -->
+            <div *ngIf="usuario.role === 'ADMIN' || usuario.role === 'TECH'" class="mb-3">
+              <label for="departamento" class="form-label">Departamento</label>
+              <input
+                type="text"
+                class="form-control"
+                id="departamento"
+                formControlName="departamento"
+                [disabled]="!editMode"
+                [class.is-invalid]="editMode && formulario.get('departamento')?.touched && formulario.get('departamento')?.value === ''"
+              />
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="mt-4 d-flex gap-2">
+              <button
+                type="button"
+                class="btn btn-primary"
+                *ngIf="!editMode"
+                (click)="activarEdicion()"
+              >
+                <mat-icon class="me-1">edit</mat-icon>
+                Editar Perfil
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-success"
+                *ngIf="editMode"
+                (click)="guardarCambios()"
+                [disabled]="guardando || formulario.invalid"
+              >
+                <mat-icon class="me-1" *ngIf="!guardando">save</mat-icon>
+                {{ guardando ? 'Guardando...' : 'Guardar Cambios' }}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-secondary"
+                *ngIf="editMode"
+                (click)="cancelarEdicion()"
+                [disabled]="guardando"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                (click)="irAlInicio()"
+              >
+                <mat-icon class="me-1">home</mat-icon>
+                Volver al inicio
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

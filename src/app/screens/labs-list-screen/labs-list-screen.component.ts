@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Lab, LabStatus } from '../../shared/models';
 import { LabsService } from '../../services/labs.service';
-import { EliminarLabComponent } from 'src/app/modals/eliminar-lab/eliminar-lab.component';
+import { AuthService } from '../../services/auth.service';
+import { EliminarLabComponent } from 'src/app/modals/eliminar-lab-modal/eliminar-lab.component';
 
 @Component({
   selector: 'app-labs-list-screen',
@@ -14,15 +15,24 @@ export class LabsListScreenComponent implements OnInit {
   laboratorios: Lab[] = [];
   cargando = false;
   error?: string;
-  columnasTabla: string[] = ['id', 'name', 'edificio', 'piso', 'capacidad', 'tipo', 'status'];
+  columnasTabla: string[] = ['id', 'nombre', 'edificio', 'piso', 'capacidad', 'tipo', 'status', 'acciones'];
+  isAdmin = false;
 
   constructor(
     private labsService: LabsService,
+    private authService: AuthService,
     private router: Router,
     public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    // Verificar que es admin
+    const user = this.authService.getAuthenticatedUser();
+    if (user?.role !== 'ADMIN') {
+      this.router.navigate(['/']);
+      return;
+    }
+    this.isAdmin = true;
     this.cargarLaboratorios();
   }
 
@@ -71,22 +81,39 @@ export class LabsListScreenComponent implements OnInit {
   public goEditar(idUser: number){
     this.router.navigate(["registro-usuarios/administrador/"+idUser]);
   }
+  
+  public abrirEditar(lab: Lab){
+    // Determinar rol del usuario desde localStorage
+    let userStr = localStorage.getItem('user');
+    let role = '';
+    try{
+      if(userStr) role = JSON.parse(userStr).role || '';
+    }catch(e){ role = '' }
 
-  public delete(idUser: number){
+    const isAdmin = ['ADMIN','administrador','TECH','TECHNICIAN','TECHNIC'].includes(role) || role.toLowerCase?.() === 'administrador';
+
+    // Navegar al formulario pasando el laboratorio y si es de sólo lectura para usuarios no admin
+    this.router.navigate(['/laboratorios/nuevo'], { state: { lab: lab, readonly: !isAdmin } });
+  }
+
+  public abrirEliminar(lab: Lab){
+    // Obtener rol del usuario
+    let userStr = localStorage.getItem('user');
+    let role = '';
+    try{ if(userStr) role = JSON.parse(userStr).role || ''; }catch(e){ role = ''; }
+
     const dialogRef = this.dialog.open(EliminarLabComponent,{
-      data: {id: idUser, rol: 'administrador'}, //Se pasan valores a través del componente
+      data: { id: lab.id, rol: role },
       height: '288px',
       width: '328px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result.isDelete){
-        console.log("Admin eliminado");
-        //Recargar página
-        window.location.reload();
+      if(result && result.isDelete){
+        // recargar lista
+        this.cargarLaboratorios();
       }else{
-        alert("Administrador no eliminado ");
-        console.log("No se eliminó el admin");
+        // nothing
       }
     });
   }

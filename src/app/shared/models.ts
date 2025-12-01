@@ -34,9 +34,9 @@ export interface Equipment {
   lab?: number; // Lab id opcional
 }
 
-export type ReservationStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'CANCELADO';
+export type ReservacionStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'CANCELADO';
 
-export interface Reservation {
+export interface Reservacion {
   id: number;
   user: number; // User id
   lab: number; // Lab id
@@ -44,11 +44,11 @@ export interface Reservation {
   horaInicio: string; // HH:mm
   horaFin: string;   // HH:mm
   motivo: string;
-  status: ReservationStatus;
+  status: ReservacionStatus;
 }
 
-export type LoanStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'DEVUELTO' | 'DAÑADO';
-export interface Loan {
+export type PrestamoStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'DEVUELTO' | 'DAÑADO';
+export interface Prestamo {
   id: number;
   user: number; // User id
   equipo: number; // Equipment id
@@ -56,5 +56,5 @@ export interface Loan {
   fechaPrestamo: string;    // ISO date
   fechaVencimiento: string;     // ISO date
   fechaDevolucion?: string; // ISO date opcional
-  status: LoanStatus;
+  status: PrestamoStatus;
 }

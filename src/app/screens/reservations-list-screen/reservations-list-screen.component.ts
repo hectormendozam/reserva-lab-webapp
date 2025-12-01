@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Reservation, ReservationStatus } from '../../shared/models';
+import { MatDialog } from '@angular/material/dialog';
+import { Reservacion, ReservacionStatus } from '../../shared/models';
 import { ReservationsService } from '../../services/reservations.service';
+import { CancelarReservaModalComponent } from 'src/app/modals/cancelar-reserva-modal/cancelar-reserva-modal.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-reservations-list-screen',
@@ -9,17 +12,26 @@ import { ReservationsService } from '../../services/reservations.service';
   styleUrls: ['./reservations-list-screen.component.scss']
 })
 export class ReservationsListScreenComponent implements OnInit {
-  reservas: Reservation[] = [];
+  reservas: Reservacion[] = [];
   cargando = false;
   error?: string;
-  columnasTabla: string[] = ['id', 'user', 'lab', 'fecha', 'horaInicio', 'horaFin', 'status', 'acciones'];
+  columnasTabla: string[] = [];
+  isEstudiante = false;
 
   constructor(
     private reservationsService: ReservationsService,
     private router: Router,
+    public dialog: MatDialog
+    , private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    const user = this.authService.getAuthenticatedUser();
+    this.isEstudiante = !!user && user.role === 'ESTUDIANTE';
+    this.columnasTabla = ['id', 'usuario', 'laboratorio', 'fecha', 'horaInicio', 'horaFin', 'status'];
+    if (!this.isEstudiante) {
+      this.columnasTabla.push('acciones');
+    }
     this.cargarReservas();
   }
 
@@ -53,20 +65,41 @@ export class ReservationsListScreenComponent implements OnInit {
     this.router.navigate(['/reservas/nueva']);
   }
 
-  aprobar(reserva: Reservation): void {
-    this.reservationsService.approve(reserva.id).subscribe(() => this.cargarReservas());
+  aprobar(reserva: Reservacion): void {
+    this.reservationsService.approve(reserva.id).subscribe({
+      next: () => this.cargarReservas(),
+      error: (err) => {
+        console.error('Error al aprobar reserva:', err);
+        alert('No se pudo aprobar la reserva. ' + (err?.error?.detail || err.message || ''));
+      }
+    });
   }
 
-  rechazar(reserva: Reservation): void {
-    this.reservationsService.reject(reserva.id).subscribe(() => this.cargarReservas());
+  rechazar(reserva: Reservacion): void {
+    this.reservationsService.reject(reserva.id).subscribe({
+      next: () => this.cargarReservas(),
+      error: (err) => {
+        console.error('Error al rechazar reserva:', err);
+        alert('No se pudo rechazar la reserva. ' + (err?.error?.detail || err.message || ''));
+      }
+    });
   }
 
-  cancelar(reserva: Reservation): void {
-    const motivo = prompt('Motivo de cancelación (opcional):') ?? undefined;
-    this.reservationsService.cancel(reserva.id, motivo).subscribe(() => this.cargarReservas());
+  cancelar(reserva: Reservacion): void {
+    const dialogRef = this.dialog.open(CancelarReservaModalComponent, {
+      data: { id: reserva.id },
+      width: '450px',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && (result.isCanceled === true || result === true)) {
+        this.cargarReservas();
+      }
+    });
   }
 
-  traducirEstado(estado: ReservationStatus): string {
+  traducirEstado(estado: ReservacionStatus): string {
     switch (estado) {
       case 'PENDIENTE':
         return 'Pendiente';

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Lab, Reservation } from '../../shared/models';
+import { Lab, Reservacion } from '../../shared/models';
 import { LabsService } from '../../services/labs.service';
 import { ReservationsService } from '../../services/reservations.service';
+import { AuthService } from '../../services/auth.service';
+import { futureDateValidator, horasCoherentesValidator } from '../../shared/validators';
 
 @Component({
   selector: 'app-reservations-form-screen',
@@ -15,25 +17,35 @@ export class ReservationsFormScreenComponent implements OnInit {
   laboratorios: Lab[] = [];
   guardando = false;
   error?: string;
-
-  // TODO: obtener el usuario autenticado desde un servicio de auth
-  private readonly usuarioIdDemo = 1;
+  usuarioId: number = 0;
 
   constructor(
     private fb: FormBuilder,
     private labsService: LabsService,
     private reservationsService: ReservationsService,
+    private authService: AuthService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.formulario = this.fb.group({
-      lab: [null, Validators.required],
-      fecha: [null, Validators.required],
-      horaInicio: [null, Validators.required],
-      horaFin: [null, Validators.required],
-      motivo: [null, [Validators.required, Validators.minLength(5)]],
-    });
+    // Obtener usuario autenticado
+    this.usuarioId = this.authService.getAuthenticatedUserId();
+    if (this.usuarioId === 0) {
+      this.error = 'Debes iniciar sesión para crear una reserva.';
+      console.warn('Usuario no autenticado');
+      // Opcionalmente: this.router.navigate(['/auth/login']);
+    }
+
+    this.formulario = this.fb.group(
+      {
+        lab: [null, Validators.required],
+        fecha: [null, [Validators.required, futureDateValidator()]],
+        horaInicio: [null, Validators.required],
+        horaFin: [null, Validators.required],
+        motivo: [null, [Validators.required, Validators.minLength(5)]],
+      },
+      { validators: horasCoherentesValidator() }
+    );
 
     this.cargarLaboratorios();
   }
@@ -72,12 +84,18 @@ export class ReservationsFormScreenComponent implements OnInit {
       return;
     }
 
+    // Validar que horaInicio < horaFin
+    if (this.formulario.hasError('horasIncoherentes')) {
+      this.error = 'La hora de inicio debe ser menor a la hora de fin.';
+      return;
+    }
+
     this.guardando = true;
     this.error = undefined;
 
     const valores = this.formulario.value;
-    const nuevaReserva: Partial<Reservation> = {
-      user: this.usuarioIdDemo,
+    const nuevaReserva: Partial<Reservacion> = {
+      user: this.usuarioId,
       lab: valores.lab,
       fecha: valores.fecha,
       horaInicio: valores.horaInicio,

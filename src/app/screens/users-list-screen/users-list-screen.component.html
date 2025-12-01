@@ -1,0 +1,73 @@
+<div class="wrapper">
+  <div class="section-users">
+    <div class="header-users">
+      <app-navbar [tipo]="'usuarios'"></app-navbar>
+    </div>
+
+    <div class="body-users p-4">
+      <div class="container">
+        <div class="encabezado d-flex justify-content-between align-items-center mb-4">
+          <h1>Gestión de Usuarios</h1>
+          <button mat-raised-button color="primary" (click)="irNuevoUsuario()">
+            <mat-icon>add</mat-icon>
+            Nuevo Usuario
+          </button>
+        </div>
+
+        <div *ngIf="cargando" class="text-center">
+          <p>Cargando usuarios...</p>
+        </div>
+
+        <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+        <div *ngIf="!cargando && users.length" class="mat-elevation-z8">
+          <table mat-table [dataSource]="users" class="w-100">
+            <!-- Columna ID -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let u">{{ u.id }}</td>
+            </ng-container>
+
+            <!-- Columna Nombre -->
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let u">{{ u.first_name }} {{ u.last_name }}</td>
+            </ng-container>
+
+            <!-- Columna Email -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+            </ng-container>
+
+            <!-- Columna Rol -->
+            <ng-container matColumnDef="rol">
+              <th mat-header-cell *matHeaderCellDef>Rol</th>
+              <td mat-cell *matCellDef="let u">{{ traducirRol(u.role) }}</td>
+            </ng-container>
+
+            <!-- Columna Acciones -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let u">
+                <button mat-icon-button color="primary" (click)="abrirEditar(u)" title="Editar">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="abrirEliminar(u)" title="Eliminar">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+          </table>
+        </div>
+
+        <div *ngIf="!cargando && !users.length" class="alert alert-info mt-3">
+          No hay usuarios registrados. Haz clic en "Nuevo Usuario" para crear uno.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="cancelar-modal p-3">
+  <h3>Cancelar Reserva</h3>
+  <p class="text-muted">Proporciona un motivo para la cancelación (opcional).</p>
+
+  <form [formGroup]="formulario">
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>Motivo de cancelación</mat-label>
+      <textarea
+        matInput
+        formControlName="motivo"
+        rows="4"
+        placeholder="Describe el motivo de la cancelación...">
+      </textarea>
+      <mat-hint align="end">Máximo 500 caracteres</mat-hint>
+    </mat-form-field>
+  </form>
+
+  <div *ngIf="error" class="alert alert-danger mt-2 mb-3">
+    {{ error }}
+  </div>
+
+  <div class="d-flex justify-content-end mt-4 gap-2">
+    <button mat-stroked-button (click)="cerrar()" [disabled]="cancelando">
+      Cerrar
+    </button>
+    <button mat-raised-button color="warn" (click)="cancelarReserva()" [disabled]="cancelando">
+      <mat-icon *ngIf="!cancelando">delete</mat-icon>
+      <mat-spinner *ngIf="cancelando" diameter="20" class="me-2"></mat-spinner>
+      {{ cancelando ? 'Cancelando...' : 'Cancelar Reserva' }}
+    </button>
+  </div>
+</div>

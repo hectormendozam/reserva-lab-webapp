@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AdministradoresService } from 'src/app/services/administradores.service';
 import { AlumnosService } from 'src/app/services/alumnos.service';
-import { MaestrosService } from 'src/app/services/maestros.service';
+import { TecnicosService } from 'src/app/services/tecnicos.service';
 
 @Component({
   selector: 'app-eliminar-user-modal',
@@ -15,8 +15,8 @@ export class EliminarUserModalComponent implements OnInit{
 
   constructor(
     private administradoresService: AdministradoresService,
-    private maestrosService: MaestrosService,
     private alumnosService: AlumnosService,
+    private tecnicosService: TecnicosService,
     private dialogRef: MatDialogRef<EliminarUserModalComponent>,
     @Inject (MAT_DIALOG_DATA) public data: any
   ){}
@@ -41,7 +41,7 @@ export class EliminarUserModalComponent implements OnInit{
       );
 
     }else if(this.rol == "maestro"){
-      this.maestrosService.eliminarMaestro(this.data.id).subscribe(
+      this.tecnicosService.eliminarTecnico(this.data.id).subscribe(
         (response)=>{
           console.log(response);
           this.dialogRef.close({isDelete:true});

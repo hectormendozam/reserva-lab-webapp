@@ -5,22 +5,22 @@ import { environment } from '../../environments/environment';
 
 export interface OccupancyReport {
   lab_id: number;
-  lab_name: string;
-  period: string;
-  occupancy_rate: number;
+  nombreLaboratorio: string;
+  periodo: string;
+  tasaOcupacion: number;
 }
 
 export interface EquipmentUsageReport {
-  equipment_id: number;
-  equipment_name: string;
-  total_loans: number;
+  idEquipo: number;
+  nombreEquipo: string;
+  totalPrestamos: number;
 }
 
 export interface IncidentReport {
-  loan_id: number;
-  equipment_name: string;
-  damage_type: string;
-  reported_at: string;
+  idPrestamo: number;
+  nombreEquipo: string;
+  tipoDano: string;
+  fechaReporte: string;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -12,6 +12,10 @@ export class NavbarComponent implements OnInit{
   public userName: string = "";
   public userRole: string = "";
   public isAdminOrTech: boolean = false;
+  public isAdmin: boolean = false;
+  public isEstudiante: boolean = false;
+  public isTecnico: boolean = false;
+  public inicioRuta: string = "/reports"; // Ruta por defecto para admin
 
   constructor(private router: Router){}
 
@@ -24,6 +28,18 @@ export class NavbarComponent implements OnInit{
         this.userName = `${user.first_name} ${user.last_name}`;
         this.userRole = user.role;
         this.isAdminOrTech = (user.role === 'ADMIN' || user.role === 'TECH');
+        this.isAdmin = (user.role === 'ADMIN');
+        this.isEstudiante = (user.role === 'ESTUDIANTE');
+        this.isTecnico = (user.role === 'TECH');
+        
+        // Configurar ruta de inicio según rol
+        if (this.isAdmin) {
+          this.inicioRuta = "/reports"; // Panel de reportes para admin
+        } else if (this.isTecnico) {
+          this.inicioRuta = "/inicio/tecnico"; // Panel de préstamos activos para técnico
+        } else if (this.isEstudiante) {
+          this.inicioRuta = "/inicio/estudiante"; // Historial de préstamos y reservas para estudiante
+        }
       } catch (e) {
         console.error('Error al parsear usuario:', e);
       }

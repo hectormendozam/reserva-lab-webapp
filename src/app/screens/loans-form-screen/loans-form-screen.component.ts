@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Equipment, Loan } from '../../shared/models';
+import { Equipment, Prestamo } from '../../shared/models';
 import { EquipmentService } from '../../services/equipment.service';
 import { LoansService } from '../../services/loans.service';
+import { AuthService } from '../../services/auth.service';
+import { cantidadDisponibleValidator, fechasCoherentesValidator } from '../../shared/validators';
 
 @Component({
   selector: 'app-loans-form-screen',
@@ -15,23 +17,47 @@ export class LoansFormScreenComponent implements OnInit {
   equipos: Equipment[] = [];
   guardando = false;
   error?: string;
-
-  // TODO: obtener el usuario autenticado desde un servicio de auth
-  private readonly usuarioIdDemo = 1;
+  usuarioId: number = 0;
 
   constructor(
     private fb: FormBuilder,
     private equipmentService: EquipmentService,
     private loansService: LoansService,
+    private authService: AuthService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.formulario = this.fb.group({
-      equipo: [null, Validators.required],
-      cantidad: [1, [Validators.required, Validators.min(1)]],
-      fechaPrestamo: [null, Validators.required],
-      fechaDevolucion: [null, Validators.required],
+    // Obtener usuario autenticado
+    this.usuarioId = this.authService.getAuthenticatedUserId();
+    if (this.usuarioId === 0) {
+      this.error = 'Debes iniciar sesión para crear un préstamo.';
+      console.warn('Usuario no autenticado');
+      // Opcionalmente: this.router.navigate(['/auth/login']);
+    }
+
+    this.formulario = this.fb.group(
+      {
+        equipo: [null, Validators.required],
+        cantidad: [1, [Validators.required, Validators.min(1)]],
+        fechaPrestamo: [null, Validators.required],
+        fechaDevolucion: [null, Validators.required],
+      },
+      { validators: fechasCoherentesValidator() }
+    );
+
+    // Escuchar cambios en el equipo seleccionado para actualizar validadores de cantidad
+    this.formulario.get('equipo')?.valueChanges.subscribe(equipoId => {
+      const equipo = this.equipos.find(e => e.id === equipoId);
+      if (equipo) {
+        const cantidadControl = this.formulario.get('cantidad');
+        cantidadControl?.setValidators([
+          Validators.required,
+          Validators.min(1),
+          cantidadDisponibleValidator(equipo.cantidadDisponible)
+        ]);
+        cantidadControl?.updateValueAndValidity();
+      }
     });
 
     this.cargarEquipos();
@@ -71,12 +97,28 @@ export class LoansFormScreenComponent implements OnInit {
       return;
     }
 
+    // Validar que fechaDevolucion >= fechaPrestamo
+    if (this.formulario.hasError('fechasIncoherentes')) {
+      this.error = 'La fecha de devolución debe ser igual o posterior a la fecha de préstamo.';
+      return;
+    }
+
+    // Validar cantidad disponible
+    const equipoId = this.formulario.get('equipo')?.value;
+    const cantidad = this.formulario.get('cantidad')?.value;
+    const equipo = this.equipos.find(e => e.id === equipoId);
+    
+    if (equipo && cantidad > equipo.cantidadDisponible) {
+      this.error = `Solo hay ${equipo.cantidadDisponible} unidades disponibles.`;
+      return;
+    }
+
     this.guardando = true;
     this.error = undefined;
 
     const valores = this.formulario.value;
-    const nuevoPrestamo: Partial<Loan> = {
-      user: this.usuarioIdDemo,
+    const nuevoPrestamo: Partial<Prestamo> = {
+      user: this.usuarioId,
       equipo: valores.equipo,
       cantidad: valores.cantidad,
       fechaPrestamo: valores.fechaPrestamo,

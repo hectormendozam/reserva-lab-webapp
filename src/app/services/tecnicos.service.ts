@@ -68,68 +68,38 @@ export class TecnicosService {
           error["confirmar_password"] = this.errorService.required;
         }
       }
-  
-      if(!this.validatorService.required(data["fecha_nacimiento"])){
-        error["fecha_nacimiento"] = this.errorService.required;
-      }
-  
-      if(!this.validatorService.required(data["rfc"])){
-        error["rfc"] = this.errorService.required;
-      }else if(!this.validatorService.min(data["rfc"], 12)){
-        error["rfc"] = this.errorService.min(12);
-        alert("La longitud de caracteres deL RFC es menor, deben ser 12");
-      }else if(!this.validatorService.max(data["rfc"], 13)){
-        error["rfc"] = this.errorService.max(13);
-        alert("La longitud de caracteres deL RFC es mayor, deben ser 13");
-      }
-  
-      if(!this.validatorService.required(data["telefono"])){
-        error["telefono"] = this.errorService.required;
-      }
-  
-      if(!this.validatorService.required(data["cubiculo"])){
-        error["cubiculo"] = this.errorService.required;
-      }
-  
-      if(!this.validatorService.required(data["area_investigacion"])){
-        error["area_investigacion"] = this.errorService.required;
-      }
-  
-      if(!this.validatorService.required(data["materias_json"])){
-        error["materias_json"] = "Debes seleccionar materias para poder registrarte";
-      }
       //Return arreglo
       return error;
     }
   
     //Aquí van los servicios HTTP
     //Servicio para registrar un nuevo usuario
-    public registrarMaestro (data: any): Observable <any>{
-      return this.http.post<any>(`${environment.url_api}/maestros/`,data, httpOptions);
+    public registrarTecnico (data: any): Observable <any>{
+      return this.http.post<any>(`${environment.url_api}/tecnicos/`,data, httpOptions);
     }
   
-    public obtenerListaMaestros (): Observable <any>{
+    public obtenerListaTecnicos (): Observable <any>{
       var token = this.facadeService.getSessionToken();
       var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
-      return this.http.get<any>(`${environment.url_api}/lista-maestros/`, {headers:headers});
+      return this.http.get<any>(`${environment.url_api}/lista-tecnicos/`, {headers:headers});
     }
   
-    //Obtener un solo maestro dependiendo su ID
+    //Obtener un solo tecnico dependiendo su ID
     public getTecnicoByID(idUser: Number){
       return this.http.get<any>(`${environment.url_api}/tecnicos/?id=${idUser}`,httpOptions);
     }
   
     //Servicio para actualizar un usuario
-    public editarMaestro (data: any): Observable <any>{
+    public editarTecnico (data: any): Observable <any>{
       var token = this.facadeService.getSessionToken();
       var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
-      return this.http.put<any>(`${environment.url_api}/maestros-edit/`, data, {headers:headers});
+      return this.http.put<any>(`${environment.url_api}/tecnicos-edit/`, data, {headers:headers});
     }
   
-    //Eliminar Maestro
-    public eliminarMaestro(idUser: number): Observable <any>{
+    //Eliminar Tecnico
+    public eliminarTecnico(idUser: number): Observable <any>{
       var token = this.facadeService.getSessionToken();
       var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
-      return this.http.delete<any>(`${environment.url_api}/maestros-edit/?id=${idUser}`,{headers:headers});
+      return this.http.delete<any>(`${environment.url_api}/tecnicos-edit/?id=${idUser}`,{headers:headers});
     }
   }

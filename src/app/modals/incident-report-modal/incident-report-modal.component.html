@@ -1,0 +1,22 @@
+<div class="wrapper">
+  <div class="icon-close">
+    <button class="btn" (click)="cerrar_modal()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  <div class="body-modal">
+    <h1 class="title-modal">Reportar Incidente</h1>
+    <span class="descripcion">
+      Equipo: <strong>{{ nombreEquipo }}</strong><br>
+      Tipo de Daño: <strong>{{ tipoDano }}</strong><br>
+      <div class="mt-3 text-start" *ngIf="descripcion">
+        <strong>Descripción:</strong><br>
+        {{ descripcion }}
+      </div>
+    </span>
+    <div class="buttons-modal">
+      <button mat-button class="btn-regresar" (click)="cerrar_modal()">Cancelar</button>
+      <button mat-button class="btn-eliminar" (click)="reportarIncidente()">Confirmar Reporte</button>
+    </div>
+  </div>
+</div>

@@ -44,12 +44,21 @@ export class AuthService {
     return this.http.get<User>(`${this.baseUrl}/me/`);
   }
 
+  updateMe(payload: Partial<User> & { carrera?: string; departamento?: string; matricula?: string }): Observable<User> {
+    return this.http.put<User>(`${this.baseUrl}/me/`, payload);
+  }
+
 
   getAuthenticatedUser(): User | null {
     try {
       const userStr = localStorage.getItem('user');
       if (!userStr) return null;
-      return JSON.parse(userStr) as User;
+      const parsed: any = JSON.parse(userStr);
+      // Normalizar compatibilidad: si backend envía 'rol', mapear a 'role'
+      if (parsed && !parsed.role && parsed.rol) {
+        parsed.role = parsed.rol;
+      }
+      return parsed as User;
     } catch (error) {
       console.error('Error al obtener usuario autenticado:', error);
       return null;

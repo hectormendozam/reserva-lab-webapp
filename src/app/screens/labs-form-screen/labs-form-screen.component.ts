@@ -33,7 +33,7 @@ export class LabsFormScreenComponent implements OnInit {
     }
 
     this.formulario = this.fb.group({
-      name: [null, [Validators.required, Validators.minLength(3)]],
+      nombre: [null, [Validators.required, Validators.minLength(3)]],
       edificio: [null, Validators.required],
       piso: [null, Validators.required],
       capacidad: [0, [Validators.required, Validators.min(1)]],
@@ -49,7 +49,7 @@ export class LabsFormScreenComponent implements OnInit {
       this.labId = lab.id;
 
       this.formulario.patchValue({
-        name: lab.name,
+        nombre: lab.nombre,
         edificio: lab.edificio,
         piso: lab.piso,
         capacidad: lab.capacidad,

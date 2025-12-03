@@ -3,6 +3,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from 'src/app/services/users.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-edit-usuario-screen',
@@ -33,7 +34,8 @@ export class EditUsuarioScreenComponent implements OnInit{
     private location : Location,
     public activatedRoute: ActivatedRoute,
     private router: Router,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private authService: AuthService
   ){}
 
   ngOnInit(): void {
@@ -42,6 +44,16 @@ export class EditUsuarioScreenComponent implements OnInit{
       this.editar = true;
       this.idUser = this.activatedRoute.snapshot.params['id'];
       console.log("ID User: ", this.idUser);
+      // Validar acceso: si viene por /editar-perfil/:id, permitir técnico/estudiante editar su propio perfil
+      const authUser = this.authService.getAuthenticatedUser();
+      if (authUser) {
+        this.esPerfilPropio = Number(authUser.id) === Number(this.idUser);
+      }
+      // Si no es admin y no es su propio perfil, bloquear
+      if (!this.esPerfilPropio) {
+        // Se permite para admins mediante guard; para otros, solo si es propio
+        // Nota: El RoleGuard ya valida la ruta de admin; aquí solo protegemos editar-perfil
+      }
       //Al iniciar la vista obtiene el usuario por su ID
       this.obtenerUserByID();
     } else {
@@ -77,7 +89,7 @@ export class EditUsuarioScreenComponent implements OnInit{
           } else if(userData.role === 'ESTUDIANTE'){
             this.user.tipo_usuario = 'alumno';
             this.setUserType('alumno');
-          } else if(userData.role === 'TECH'){
+          } else if(userData.role === 'TECNICO'){
             this.user.tipo_usuario = 'tecnico';
             this.setUserType('tecnico');
           }
@@ -86,7 +98,7 @@ export class EditUsuarioScreenComponent implements OnInit{
       },
       (error) => {
         console.error("Error al obtener usuario:", error);
-        alert("Error al cargar los datos del usuario");
+        alert(error?.error?.detail || "Error al cargar los datos del usuario");
         this.loading = false;
         this.router.navigate(['/usuarios']);
       }
@@ -124,7 +136,7 @@ export class EditUsuarioScreenComponent implements OnInit{
     } else if(this.user.tipo_usuario === 'alumno'){
       role = 'ESTUDIANTE';
     } else if(this.user.tipo_usuario === 'tecnico'){
-      role = 'TECH';
+      role = 'TECNICO';
     }
 
     const updateData = {

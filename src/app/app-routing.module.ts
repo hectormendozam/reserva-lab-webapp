@@ -28,12 +28,9 @@ const routes: Routes = [
   { path: 'auth/login', component: LoginScreenComponent, pathMatch: 'full' },
   { path: 'auth/register', component: RegistroUsuariosScreenComponent, pathMatch: 'full' },
 
-  // Editar usuario (ADMIN only)
-  { path: 'editar-usuario/:id', component: EditUsuarioScreenComponent, canActivate: [RoleGuard], data: { roles: ['ADMIN'] }, pathMatch: 'full' },
-
-  // Inicio / Home (por rol - estudiante y técnico) -> usar ReportsScreenComponent para rendering role-based
-  { path: 'inicio/estudiante', component: ReportsScreenComponent, pathMatch: 'full' },
-  { path: 'inicio/tecnico', component: ReportsScreenComponent, pathMatch: 'full' },
+  // Perfil
+  { path: 'perfil', component: ProfileScreenComponent, pathMatch: 'full' },
+  { path: 'editar-perfil', component: ProfileScreenComponent, pathMatch: 'full' },
 
   // Reservas
   { path: 'reservas', component: ReservationsListScreenComponent, pathMatch: 'full' },
@@ -43,22 +40,23 @@ const routes: Routes = [
   { path: 'prestamos', component: LoansListScreenComponent, pathMatch: 'full' },
   { path: 'prestamos/nuevo', component: LoansFormScreenComponent, pathMatch: 'full' },
 
-  // Laboratorios - Solo ADMIN
-  { path: 'laboratorios', component: LabsListScreenComponent, canActivate: [RoleGuard], data: { roles: ['ADMIN'] }, pathMatch: 'full' },
-  { path: 'laboratorios/nuevo', component: LabsFormScreenComponent, canActivate: [RoleGuard], data: { roles: ['ADMIN'] }, pathMatch: 'full' },
-
-  // Equipos - Solo ADMIN
-  { path: 'equipos', component: EquipmentListScreenComponent, canActivate: [RoleGuard], data: { roles: ['ADMIN'] }, pathMatch: 'full' },
-  { path: 'equipos/nuevo', component: EquipmentFormScreenComponent, canActivate: [RoleGuard], data: { roles: ['ADMIN'] }, pathMatch: 'full' },
-
-  // Reportes (vista consolidada)
+  // Reportes e inicio por rol
   { path: 'reports', component: ReportsScreenComponent, pathMatch: 'full' },
+  { path: 'inicio/tecnico', component: ReportsScreenComponent, pathMatch: 'full' },
+  { path: 'inicio/estudiante', component: ReportsScreenComponent, pathMatch: 'full' },
 
-  // Usuarios (ADMIN only)
-  { path: 'usuarios', component: UsersListScreenComponent, canActivate: [RoleGuard], data: { roles: ['ADMIN'] }, pathMatch: 'full' },
+  // Administración
+  { path: 'laboratorios', component: LabsListScreenComponent, pathMatch: 'full' },
+  { path: 'laboratorios/nuevo', component: LabsFormScreenComponent, pathMatch: 'full' },
+  { path: 'equipos', component: EquipmentListScreenComponent, pathMatch: 'full' },
+  { path: 'equipos/nuevo', component: EquipmentFormScreenComponent, pathMatch: 'full' },
+  { path: 'usuarios', component: UsersListScreenComponent, pathMatch: 'full' },
 
-  // Perfil
-  { path: 'perfil', component: ProfileScreenComponent, pathMatch: 'full' },
+  // Editar usuario (acceso abierto para simplificar edición)
+  { path: 'editar-usuario/:id', component: EditUsuarioScreenComponent, pathMatch: 'full' },
+
+  // Editar perfil propio (sin restricción de rol, valida por id del usuario autenticado en la vista)
+  { path: 'editar-perfil/:id', component: EditUsuarioScreenComponent, pathMatch: 'full' },
 
   // TODO: futuras rutas para labs, equipment, reservations, loans, admin/users
   // { path: 'labs', component: LabsListScreenComponent },

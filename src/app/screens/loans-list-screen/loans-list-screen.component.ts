@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Prestamo, PrestamoStatus } from '../../shared/models';
 import { LoansService } from '../../services/loans.service';
 import { AuthService } from '../../services/auth.service';
@@ -11,9 +13,13 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoansListScreenComponent implements OnInit {
   prestamos: Prestamo[] = [];
+  dataSource = new MatTableDataSource<Prestamo>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   cargando = false;
   error?: string;
   columnasTabla: string[] = [];
+  filtro: string = '';
+  ordenPor: string = 'fecha';
   isEstudiante = false;
 
   constructor(
@@ -30,6 +36,9 @@ export class LoansListScreenComponent implements OnInit {
       this.columnasTabla.push('acciones');
     }
     this.cargarPrestamos();
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+    }, 100);
   }
 
   cargarPrestamos(): void {
@@ -40,6 +49,7 @@ export class LoansListScreenComponent implements OnInit {
       next: (data) => {
         console.log('Préstamos recibidos del backend:', data);
         this.prestamos = data;
+        this.actualizarDataSource();
         this.cargando = false;
         if (data.length === 0) {
           console.warn('La lista de préstamos está vacía');
@@ -56,6 +66,47 @@ export class LoansListScreenComponent implements OnInit {
         this.cargando = false;
       },
     });
+  }
+
+  actualizarDataSource(): void {
+    let datos = [...this.prestamos];
+    // Aplicar filtro
+    if (this.filtro.trim()) {
+      const busqueda = this.filtro.toLowerCase();
+      datos = datos.filter(p =>
+        (p.equipo as any)?.nombre?.toLowerCase().includes(busqueda) ||
+        p.status?.toLowerCase().includes(busqueda)
+      );
+    }
+    // Aplicar orden
+    datos.sort((a, b) => {
+      let aVal: any, bVal: any;
+      switch (this.ordenPor) {
+        case 'fecha':
+          aVal = new Date(a.fechaPrestamo).getTime();
+          bVal = new Date(b.fechaPrestamo).getTime();
+          break;
+        case 'estado':
+          aVal = a.status;
+          bVal = b.status;
+          break;
+        default:
+          aVal = new Date(a.fechaPrestamo).getTime();
+          bVal = new Date(b.fechaPrestamo).getTime();
+      }
+      return typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal - bVal;
+    });
+    this.dataSource.data = datos;
+  }
+
+  aplicarFiltro(event: any): void {
+    this.filtro = event.target.value;
+    this.actualizarDataSource();
+  }
+
+  cambiarOrden(campo: string): void {
+    this.ordenPor = campo;
+    this.actualizarDataSource();
   }
 
   irNuevoPrestamo(): void {
@@ -86,11 +137,18 @@ export class LoansListScreenComponent implements OnInit {
   }
 
   devolver(prestamo: Prestamo, danado: boolean = false): void {
-    this.loansService.return(prestamo.id, danado).subscribe({
-      next: () => this.cargarPrestamos(),
+    const accion$ = danado
+      ? this.loansService.markDamaged(prestamo.id)
+      : this.loansService.markReturned(prestamo.id);
+
+    accion$.subscribe({
+      next: () => {
+        console.log(`Préstamo marcado como ${danado ? 'dañado' : 'devuelto'}:`, prestamo.id);
+        this.cargarPrestamos();
+      },
       error: (err) => {
-        console.error('Error al devolver préstamo:', err);
-        alert('No se pudo marcar como devuelto/dañado. ' + (err?.error?.detail || err.message || ''));
+        console.error(`Error al marcar como ${danado ? 'dañado' : 'devuelto'}:`, err);
+        alert(`No se pudo marcar como ${danado ? 'dañado' : 'devuelto'}. ` + (err?.error?.detail || err.message || ''));
       }
     });
   }
@@ -105,8 +163,8 @@ export class LoansListScreenComponent implements OnInit {
         return 'Rechazado';
       case 'DEVUELTO':
         return 'Devuelto';
-      case 'DAÑADO':
-        return 'Dañados';
+      case 'DANADO':
+        return 'Dañado';
       default:
         return estado;
     }

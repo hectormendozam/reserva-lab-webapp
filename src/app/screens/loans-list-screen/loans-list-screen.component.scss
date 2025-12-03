@@ -7,21 +7,26 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .tabla-prestamos {
   width: 100%;
   border-collapse: collapse;
+  overflow-x: auto;
 }
 
 .tabla-prestamos th,
 .tabla-prestamos td {
   border: 1px solid #ddd;
   padding: 0.5rem;
+  text-align: left;
 }
 
 .tabla-prestamos th {
   background-color: #f5f5f5;
+  font-weight: 600;
 }
 
 .acciones button {
@@ -97,4 +102,104 @@
 .badge-danado {
   background-color: #dc3545;
   color: #fff;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 992px) {
+  .prestamos-container {
+    padding: 1rem;
+  }
+
+  .tabla-prestamos th,
+  .tabla-prestamos td {
+    padding: 0.375rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .encabezado {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .encabezado input,
+  .encabezado select {
+    width: 100%;
+  }
+
+  .tabla-prestamos {
+    font-size: 0.75rem;
+  }
+
+  .tabla-prestamos th,
+  .tabla-prestamos td {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .tabla-prestamos th {
+    white-space: nowrap;
+  }
+
+  /* Ocultar columnas menos importantes en móvil */
+  .mat-column-usuario,
+  .mat-column-equipo {
+    display: none;
+  }
+
+  .badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .prestamos-container {
+    padding: 0.5rem;
+  }
+
+  .tabla-prestamos th,
+  .tabla-prestamos td {
+    padding: 0.25rem;
+    font-size: 0.65rem;
+  }
+
+  .encabezado h1,
+  .encabezado h2 {
+    font-size: 1.25rem;
+  }
+
+  /* En móvil, mostrar tabla en formato stack */
+  .tabla-prestamos thead {
+    display: none;
+  }
+
+  .tabla-prestamos,
+  .tabla-prestamos tbody,
+  .tabla-prestamos tr,
+  .tabla-prestamos td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-prestamos tr {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+  }
+
+  .tabla-prestamos td {
+    padding: 0.5rem;
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .tabla-prestamos td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.5rem;
+    font-weight: bold;
+    text-align: left;
+  }
 }

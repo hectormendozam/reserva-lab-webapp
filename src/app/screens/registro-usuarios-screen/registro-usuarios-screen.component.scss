@@ -78,3 +78,44 @@
   cursor: pointer;
   will-change: opacity,transform,border-color,color;
 }
+
+/* Mobile optimizations */
+@media (max-width: 992px) {
+  .container {
+    width: 90vw;
+  }
+  .title-user {
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper,
+  .section-registro,
+  .body-registro {
+    height: auto;
+    min-height: 100vh;
+  }
+  .container {
+    width: 100vw;
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+  ::ng-deep .mat-mdc-radio-button .mdc-form-field {
+    font-size: 16px;
+  }
+  form .row > [class^="col-"] {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  .col-md-6 {
+    width: 100%;
+  }
+  .mat-form-field {
+    width: 100%;
+  }
+  .img-slider { display: none; }
+  .rol-user .row.mt-5 { margin-top: 1.5rem !important; }
+  .forms-registro .mt-5 { margin-top: 1.25rem !important; }
+}

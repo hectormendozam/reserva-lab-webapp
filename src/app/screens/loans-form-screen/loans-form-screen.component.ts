@@ -70,9 +70,9 @@ export class LoansFormScreenComponent implements OnInit {
         // Si no hay equipos, usar datos de ejemplo
         if (this.equipos.length === 0) {
           this.equipos = [
-            { id: 1, name: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
-            { id: 2, name: 'Laptop HP', descripcion: 'Laptop para préstamo', numeroInventario: 'LAP-001', cantidadTotal: 15, cantidadDisponible: 12, status: 'DISPONIBLE' },
-            { id: 3, name: 'Osciloscopio', descripcion: 'Osciloscopio digital', numeroInventario: 'OSC-001', cantidadTotal: 5, cantidadDisponible: 4, status: 'DISPONIBLE' }
+            { id: 1, nombre: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
+            { id: 2, nombre: 'Laptop HP', descripcion: 'Laptop para préstamo', numeroInventario: 'LAP-001', cantidadTotal: 15, cantidadDisponible: 12, status: 'DISPONIBLE' },
+            { id: 3, nombre: 'Osciloscopio', descripcion: 'Osciloscopio digital', numeroInventario: 'OSC-001', cantidadTotal: 5, cantidadDisponible: 4, status: 'DISPONIBLE' }
           ];
           console.warn('No hay equipos en el backend, usando datos de ejemplo');
         }
@@ -81,9 +81,9 @@ export class LoansFormScreenComponent implements OnInit {
       error: (err) => {
         // En caso de error, también usar datos de ejemplo
         this.equipos = [
-          { id: 1, name: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
-          { id: 2, name: 'Laptop HP', descripcion: 'Laptop para préstamo', numeroInventario: 'LAP-001', cantidadTotal: 15, cantidadDisponible: 12, status: 'DISPONIBLE' },
-          { id: 3, name: 'Osciloscopio', descripcion: 'Osciloscopio digital', numeroInventario: 'OSC-001', cantidadTotal: 5, cantidadDisponible: 4, status: 'DISPONIBLE' }
+          { id: 1, nombre: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
+          { id: 2, nombre: 'Laptop HP', descripcion: 'Laptop para préstamo', numeroInventario: 'LAP-001', cantidadTotal: 15, cantidadDisponible: 12, status: 'DISPONIBLE' },
+          { id: 3, nombre: 'Osciloscopio', descripcion: 'Osciloscopio digital', numeroInventario: 'OSC-001', cantidadTotal: 5, cantidadDisponible: 4, status: 'DISPONIBLE' }
         ];
         this.error = 'No se pudieron cargar los equipos del servidor. Mostrando datos de ejemplo.';
         console.error('Error al cargar equipos:', err);

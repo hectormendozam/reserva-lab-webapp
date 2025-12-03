@@ -57,9 +57,9 @@ export class ReservationsFormScreenComponent implements OnInit {
         // Si no hay laboratorios, usar datos de ejemplo
         if (this.laboratorios.length === 0) {
           this.laboratorios = [
-            { id: 1, name: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
-            { id: 2, name: 'Laboratorio de Electrónica', edificio: 'Edificio B', piso: '2', capacidad: 25, tipo: 'ELECTRONICA', status: 'ACTIVO' },
-            { id: 3, name: 'Laboratorio de Cómputo 2', edificio: 'Edificio C', piso: '1', capacidad: 35, tipo: 'COMPUTO', status: 'ACTIVO' }
+            { id: 1, nombre: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
+            { id: 2, nombre: 'Laboratorio de Electrónica', edificio: 'Edificio B', piso: '2', capacidad: 25, tipo: 'ELECTRONICA', status: 'ACTIVO' },
+            { id: 3, nombre: 'Laboratorio de Cómputo 2', edificio: 'Edificio C', piso: '1', capacidad: 35, tipo: 'COMPUTO', status: 'ACTIVO' }
           ];
           console.warn('No hay laboratorios en el backend, usando datos de ejemplo');
         }
@@ -68,9 +68,9 @@ export class ReservationsFormScreenComponent implements OnInit {
       error: (err) => {
         // En caso de error, también usar datos de ejemplo
         this.laboratorios = [
-          { id: 1, name: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
-          { id: 2, name: 'Laboratorio de Electrónica', edificio: 'Edificio B', piso: '2', capacidad: 25, tipo: 'ELECTRONICA', status: 'ACTIVO' },
-          { id: 3, name: 'Laboratorio de Cómputo 2', edificio: 'Edificio C', piso: '1', capacidad: 35, tipo: 'COMPUTO', status: 'ACTIVO' }
+          { id: 1, nombre: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
+          { id: 2, nombre: 'Laboratorio de Electrónica', edificio: 'Edificio B', piso: '2', capacidad: 25, tipo: 'ELECTRONICA', status: 'ACTIVO' },
+          { id: 3, nombre: 'Laboratorio de Cómputo 2', edificio: 'Edificio C', piso: '1', capacidad: 35, tipo: 'COMPUTO', status: 'ACTIVO' }
         ];
         this.error = 'No se pudieron cargar los laboratorios del servidor. Mostrando datos de ejemplo.';
         console.error('Error al cargar laboratorios:', err);

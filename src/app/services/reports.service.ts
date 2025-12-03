@@ -4,16 +4,18 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface OccupancyReport {
-  lab_id: number;
-  nombreLaboratorio: string;
-  periodo: string;
-  tasaOcupacion: number;
+  lab_id?: number;
+  nombre: string;  // Backend usa 'nombre' para el nombre del lab
+  periodo?: string;
+  tasaOcupacion?: number;
+  tasa_ocupacion?: number;  // Alias por si backend devuelve snake_case
 }
 
 export interface EquipmentUsageReport {
-  idEquipo: number;
-  nombreEquipo: string;
-  totalPrestamos: number;
+  equipo__nombre?: string;  // Backend agrega por equipo__nombre
+  nombre?: string;          // Alias si devuelve nombre directamente
+  totalPrestamos?: number;
+  total_prestamos?: number; // Alias snake_case
 }
 
 export interface IncidentReport {

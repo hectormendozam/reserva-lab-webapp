@@ -79,8 +79,8 @@
                       </mat-form-field>
                     </div>
                     
-                    <!-- Campo para Técnico: Departamento -->
-                    <div class="col-md-6 mb-3" *ngIf="isTecnico">
+                    <!-- Campo para Técnico/Admin: Departamento -->
+                    <div class="col-md-6 mb-3" *ngIf="isTecnico || isAdmin">
                       <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Departamento</mat-label>
                         <input matInput [(ngModel)]="user.departamento" name="departamento">
@@ -88,6 +88,14 @@
                     </div>
 
                     <div class="col-md-6 mb-3" *ngIf="isTecnico">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Num. Trabajador</mat-label>
+                        <input matInput [(ngModel)]="user.matricula" name="matricula">
+                      </mat-form-field>
+                    </div>
+
+                    <!-- Campo para Administrador: Num. Trabajador (matrícula) -->
+                    <div class="col-md-6 mb-3" *ngIf="isAdmin">
                       <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Num. Trabajador</mat-label>
                         <input matInput [(ngModel)]="user.matricula" name="matricula">

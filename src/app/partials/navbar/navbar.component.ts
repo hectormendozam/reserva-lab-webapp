@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit{
   public isEstudiante: boolean = false;
   public isTecnico: boolean = false;
   public inicioRuta: string = "/reports"; // Ruta por defecto para admin
+  public sidebarOpen: boolean = false; // Para control del sidebar en móvil
 
   constructor(private router: Router){}
 
@@ -24,13 +25,17 @@ export class NavbarComponent implements OnInit{
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
-        const user = JSON.parse(userStr);
+        const user: any = JSON.parse(userStr);
+        // Normalizar compatibilidad: si viene 'rol' desde backend, mapear a 'role'
+        if (user && !user.role && user.rol) {
+          user.role = user.rol;
+        }
         this.userName = `${user.first_name} ${user.last_name}`;
         this.userRole = user.role;
-        this.isAdminOrTech = (user.role === 'ADMIN' || user.role === 'TECH');
+        this.isAdminOrTech = (user.role === 'ADMIN' || user.role === 'TECNICO');
         this.isAdmin = (user.role === 'ADMIN');
         this.isEstudiante = (user.role === 'ESTUDIANTE');
-        this.isTecnico = (user.role === 'TECH');
+        this.isTecnico = (user.role === 'TECNICO');
         
         // Configurar ruta de inicio según rol
         if (this.isAdmin) {
@@ -54,5 +59,9 @@ export class NavbarComponent implements OnInit{
     
     // Navegar al login
     this.router.navigate(['/auth/login']);
+  }
+
+  public toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
   }
 }

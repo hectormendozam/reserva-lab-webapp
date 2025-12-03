@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Reservacion, ReservacionStatus } from '../../shared/models';
 import { ReservationsService } from '../../services/reservations.service';
 import { CancelarReservaModalComponent } from 'src/app/modals/cancelar-reserva-modal/cancelar-reserva-modal.component';
@@ -13,9 +15,13 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ReservationsListScreenComponent implements OnInit {
   reservas: Reservacion[] = [];
+  dataSource = new MatTableDataSource<Reservacion>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   cargando = false;
   error?: string;
   columnasTabla: string[] = [];
+  filtro: string = '';
+  ordenPor: string = 'fecha';
   isEstudiante = false;
 
   constructor(
@@ -33,6 +39,9 @@ export class ReservationsListScreenComponent implements OnInit {
       this.columnasTabla.push('acciones');
     }
     this.cargarReservas();
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+    }, 100);
   }
 
   cargarReservas(): void {
@@ -43,6 +52,7 @@ export class ReservationsListScreenComponent implements OnInit {
       next: (data) => {
         console.log('Reservas recibidas del backend:', data);
         this.reservas = data;
+        this.actualizarDataSource();
         this.cargando = false;
         if (data.length === 0) {
           console.warn('La lista de reservas está vacía');
@@ -59,6 +69,47 @@ export class ReservationsListScreenComponent implements OnInit {
         this.cargando = false;
       },
     });
+  }
+
+  actualizarDataSource(): void {
+    let datos = [...this.reservas];
+    // Aplicar filtro
+    if (this.filtro.trim()) {
+      const busqueda = this.filtro.toLowerCase();
+      datos = datos.filter(r =>
+        (r.lab as any)?.name?.toLowerCase().includes(busqueda) ||
+        r.status?.toLowerCase().includes(busqueda)
+      );
+    }
+    // Aplicar orden
+    datos.sort((a, b) => {
+      let aVal: any, bVal: any;
+      switch (this.ordenPor) {
+        case 'fecha':
+          aVal = new Date(a.fecha).getTime();
+          bVal = new Date(b.fecha).getTime();
+          break;
+        case 'estado':
+          aVal = a.status;
+          bVal = b.status;
+          break;
+        default:
+          aVal = new Date(a.fecha).getTime();
+          bVal = new Date(b.fecha).getTime();
+      }
+      return typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal - bVal;
+    });
+    this.dataSource.data = datos;
+  }
+
+  aplicarFiltro(event: any): void {
+    this.filtro = event.target.value;
+    this.actualizarDataSource();
+  }
+
+  cambiarOrden(campo: string): void {
+    this.ordenPor = campo;
+    this.actualizarDataSource();
   }
 
   irANuevaReserva(): void {

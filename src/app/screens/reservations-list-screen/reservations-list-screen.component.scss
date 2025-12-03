@@ -7,21 +7,26 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .tabla-reservas {
   width: 100%;
   border-collapse: collapse;
+  overflow-x: auto;
 }
 
 .tabla-reservas th,
 .tabla-reservas td {
   border: 1px solid #ddd;
   padding: 0.5rem;
+  text-align: left;
 }
 
 .tabla-reservas th {
   background-color: #f5f5f5;
+  font-weight: 600;
 }
 
 .acciones button {
@@ -97,4 +102,104 @@
 .badge-danado {
   background-color: #dc3545;
   color: #fff;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 992px) {
+  .reservas-container {
+    padding: 1rem;
+  }
+
+  .tabla-reservas th,
+  .tabla-reservas td {
+    padding: 0.375rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .encabezado {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .encabezado input,
+  .encabezado select {
+    width: 100%;
+  }
+
+  .tabla-reservas {
+    font-size: 0.75rem;
+  }
+
+  .tabla-reservas th,
+  .tabla-reservas td {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .tabla-reservas th {
+    white-space: nowrap;
+  }
+
+  /* Ocultar columnas menos importantes en móvil */
+  .mat-column-estudiante,
+  .mat-column-laboratorio {
+    display: none;
+  }
+
+  .badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .reservas-container {
+    padding: 0.5rem;
+  }
+
+  .tabla-reservas th,
+  .tabla-reservas td {
+    padding: 0.25rem;
+    font-size: 0.65rem;
+  }
+
+  .encabezado h1,
+  .encabezado h2 {
+    font-size: 1.25rem;
+  }
+
+  /* En móvil, mostrar tabla en formato stack */
+  .tabla-reservas thead {
+    display: none;
+  }
+
+  .tabla-reservas,
+  .tabla-reservas tbody,
+  .tabla-reservas tr,
+  .tabla-reservas td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-reservas tr {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+  }
+
+  .tabla-reservas td {
+    padding: 0.5rem;
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .tabla-reservas td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.5rem;
+    font-weight: bold;
+    text-align: left;
+  }
 }

@@ -104,8 +104,20 @@
               />
             </div>
 
-            <!-- Departamento (editable si es ADMIN/TECH) -->
-            <div *ngIf="usuario.role === 'ADMIN' || usuario.role === 'TECH'" class="mb-3">
+            <!-- Carrera (editable si es ESTUDIANTE) -->
+            <div *ngIf="usuario.role === 'ESTUDIANTE'" class="mb-3">
+              <label for="carrera" class="form-label">Carrera</label>
+              <input
+                type="text"
+                class="form-control"
+                id="carrera"
+                formControlName="carrera"
+                [disabled]="!editMode"
+              />
+            </div>
+
+            <!-- Departamento (editable si es ADMIN/TECNICO) -->
+            <div *ngIf="usuario.role === 'ADMIN' || usuario.role === 'TECNICO'" class="mb-3">
               <label for="departamento" class="form-label">Departamento</label>
               <input
                 type="text"

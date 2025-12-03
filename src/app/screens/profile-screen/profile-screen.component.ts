@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from '../../shared/models';
+import { UsersService } from '../../services/users.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -18,16 +19,19 @@ export class ProfileScreenComponent implements OnInit {
   error?: string;
   success?: string;
   isAdmin = false;
+  isTecnico = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private usersService: UsersService
   ) {}
 
   ngOnInit(): void {
-    this.cargarPerfil();
     this.inicializarFormulario();
+    this.cargarPerfil();
   }
 
   cargarPerfil(): void {
@@ -37,8 +41,10 @@ export class ProfileScreenComponent implements OnInit {
     if (user) {
       this.usuario = user;
       this.isAdmin = this.usuario?.role === 'ADMIN';
-      this.cargando = false;
+      this.isTecnico = this.usuario?.role === 'TECNICO';
       this.actualizarFormulario();
+      this.cargando = false;
+      this.cdr.detectChanges();
       return;
     }
 
@@ -47,17 +53,20 @@ export class ProfileScreenComponent implements OnInit {
       next: (u) => {
         this.usuario = u;
         this.isAdmin = this.usuario?.role === 'ADMIN';
+        this.isTecnico = this.usuario?.role === 'TECNICO';
         try {
           localStorage.setItem('user', JSON.stringify(u));
         } catch (e) {
           console.warn('No se pudo guardar usuario en localStorage:', e);
         }
-        this.cargando = false;
         this.actualizarFormulario();
+        this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al obtener usuario desde API:', err);
         this.cargando = false;
+        this.cdr.detectChanges();
         this.router.navigate(['/auth/login']);
       }
     });
@@ -65,36 +74,56 @@ export class ProfileScreenComponent implements OnInit {
 
   inicializarFormulario(): void {
     this.formulario = this.fb.group({
-      first_name: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(2)]],
-      last_name: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(2)]],
-      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
-      role: [{ value: '', disabled: true }],
-      matricula: [{ value: '', disabled: true }],
+      first_name: ['', [Validators.required, Validators.minLength(2)]],
+      last_name: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      role: [''],
+      matricula: [''],
+      carrera: [''],
       departamento: [''],
     });
   }
 
   actualizarFormulario(): void {
     if (this.usuario) {
+      const rolTraducido = this.usuario.role === 'TECNICO' ? 'Técnico' : 
+                          this.usuario.role === 'ESTUDIANTE' ? 'Estudiante' :
+                          this.usuario.role === 'ADMIN' ? 'Administrador' : this.usuario.role;
+      
       this.formulario.patchValue({
         first_name: this.usuario.first_name || '',
         last_name: this.usuario.last_name || '',
         email: this.usuario.email || '',
-        role: this.usuario.role || '',
+        role: rolTraducido,
         matricula: (this.usuario as any).matricula || '',
+        carrera: (this.usuario as any).carrera || '',
         departamento: (this.usuario as any).departamento || '',
       });
-      // asegurar que los campos que deben ser lectura estén deshabilitados
-      this.formulario.get('first_name')?.disable();
-      this.formulario.get('last_name')?.disable();
-      this.formulario.get('departamento')?.disable();
+      
+      // Deshabilitar campos que no deben ser editables
+      this.formulario.get('email')?.disable();
+      this.formulario.get('role')?.disable();
+      this.formulario.get('matricula')?.disable();
+      
+      // En modo lectura, deshabilitar edición de nombres
+      if (!this.editMode) {
+        this.formulario.get('first_name')?.disable();
+        this.formulario.get('last_name')?.disable();
+        this.formulario.get('carrera')?.disable();
+        this.formulario.get('departamento')?.disable();
+      }
+      
+      this.cdr.detectChanges();
     }
   }
 
   activarEdicion(): void {
-    // Redirigir a la pantalla de editar usuario
-    if (this.usuario && this.usuario.id) {
-      this.router.navigate([`/editar-usuario/${this.usuario.id}`]);
+    this.editMode = true;
+    // Habilitar campos editables
+    this.formulario.get('first_name')?.enable();
+    this.formulario.get('last_name')?.enable();
+    if (this.isAdmin || this.isTecnico) {
+      this.formulario.get('departamento')?.enable();
     }
   }
 
@@ -105,6 +134,7 @@ export class ProfileScreenComponent implements OnInit {
     this.actualizarFormulario();
     this.formulario.get('first_name')?.disable();
     this.formulario.get('last_name')?.disable();
+    this.formulario.get('carrera')?.disable();
     this.formulario.get('departamento')?.disable();
   }
 
@@ -119,11 +149,16 @@ export class ProfileScreenComponent implements OnInit {
     this.error = undefined;
     this.success = undefined;
 
-    const datos = {
+    const datos: any = {
       first_name: this.formulario.get('first_name')?.value,
       last_name: this.formulario.get('last_name')?.value,
-      departamento: this.formulario.get('departamento')?.value,
     };
+    if (this.usuario?.role === 'ESTUDIANTE') {
+      datos.carrera = this.formulario.get('carrera')?.value;
+    }
+    if (this.isAdmin || this.isTecnico) {
+      datos.departamento = this.formulario.get('departamento')?.value;
+    }
 
     // Validar nombres
     if (!datos.first_name || datos.first_name.trim().length < 2) {
@@ -138,21 +173,34 @@ export class ProfileScreenComponent implements OnInit {
       return;
     }
 
-    // Hacer llamada al backend para actualizar (usando AuthService o un método patch)
-    // Por ahora, simulamos actualización local
-    if (this.usuario) {
-      this.usuario.first_name = datos.first_name;
-      this.usuario.last_name = datos.last_name;
-      (this.usuario as any).departamento = datos.departamento;
-      localStorage.setItem('user', JSON.stringify(this.usuario));
+    // Persistir cambios en backend
+    if (this.usuario?.id) {
+      this.usersService.update(this.usuario.id, datos).subscribe({
+        next: (u) => {
+          // Actualizar usuario local y localStorage
+          this.usuario = { ...this.usuario!, ...u } as User;
+          try {
+            localStorage.setItem('user', JSON.stringify(this.usuario));
+          } catch {}
+          this.success = 'Perfil actualizado correctamente.';
+          this.error = undefined;
+          this.editMode = false;
+          this.formulario.get('first_name')?.disable();
+          this.formulario.get('last_name')?.disable();
+          this.formulario.get('carrera')?.disable();
+          this.formulario.get('departamento')?.disable();
+        },
+        error: (err) => {
+          console.error('Error al actualizar perfil:', err);
+          this.error = err.error?.message || 'No se pudo actualizar el perfil.';
+          this.success = undefined;
+        }
+      });
+      this.guardando = false;
+      return;
     }
 
     this.guardando = false;
-    this.success = 'Perfil actualizado correctamente.';
-    this.editMode = false;
-    this.formulario.get('first_name')?.disable();
-    this.formulario.get('last_name')?.disable();
-    this.formulario.get('departamento')?.disable();
   }
 
   irAlInicio(): void {

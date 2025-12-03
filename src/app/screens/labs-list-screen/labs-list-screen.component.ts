@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Lab, LabStatus } from '../../shared/models';
 import { LabsService } from '../../services/labs.service';
 import { AuthService } from '../../services/auth.service';
@@ -13,9 +15,13 @@ import { EliminarLabComponent } from 'src/app/modals/eliminar-lab-modal/eliminar
 })
 export class LabsListScreenComponent implements OnInit {
   laboratorios: Lab[] = [];
+  dataSource = new MatTableDataSource<Lab>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   cargando = false;
   error?: string;
   columnasTabla: string[] = ['id', 'nombre', 'edificio', 'piso', 'capacidad', 'tipo', 'status', 'acciones'];
+  filtro: string = '';
+  ordenPor: string = 'nombre';
   isAdmin = false;
 
   constructor(
@@ -34,6 +40,9 @@ export class LabsListScreenComponent implements OnInit {
     }
     this.isAdmin = true;
     this.cargarLaboratorios();
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+    }, 100);
   }
 
   cargarLaboratorios(): void {
@@ -44,6 +53,7 @@ export class LabsListScreenComponent implements OnInit {
       next: (data) => {
         console.log('Laboratorios recibidos del backend:', data);
         this.laboratorios = data;
+        this.actualizarDataSource();
         this.cargando = false;
         if (data.length === 0) {
           console.warn('La lista de laboratorios está vacía');
@@ -60,6 +70,52 @@ export class LabsListScreenComponent implements OnInit {
         this.cargando = false;
       },
     });
+  }
+
+  actualizarDataSource(): void {
+    let datos = [...this.laboratorios];
+    // Aplicar filtro
+    if (this.filtro.trim()) {
+      const busqueda = this.filtro.toLowerCase();
+      datos = datos.filter(lab =>
+        lab.nombre?.toLowerCase().includes(busqueda) ||
+        lab.edificio?.toLowerCase().includes(busqueda) ||
+        lab.tipo?.toLowerCase().includes(busqueda)
+      );
+    }
+    // Aplicar orden
+    datos.sort((a, b) => {
+      let aVal: any, bVal: any;
+      switch (this.ordenPor) {
+        case 'nombre':
+          aVal = a.nombre;
+          bVal = b.nombre;
+          break;
+        case 'capacidad':
+          aVal = a.capacidad;
+          bVal = b.capacidad;
+          break;
+        case 'edificio':
+          aVal = a.edificio;
+          bVal = b.edificio;
+          break;
+        default:
+          aVal = a.nombre;
+          bVal = b.nombre;
+      }
+      return typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal - bVal;
+    });
+    this.dataSource.data = datos;
+  }
+
+  aplicarFiltro(event: any): void {
+    this.filtro = event.target.value;
+    this.actualizarDataSource();
+  }
+
+  cambiarOrden(campo: string): void {
+    this.ordenPor = campo;
+    this.actualizarDataSource();
   }
 
   irNuevoLaboratorio(): void {
@@ -90,7 +146,7 @@ export class LabsListScreenComponent implements OnInit {
       if(userStr) role = JSON.parse(userStr).role || '';
     }catch(e){ role = '' }
 
-    const isAdmin = ['ADMIN','administrador','TECH','TECHNICIAN','TECHNIC'].includes(role) || role.toLowerCase?.() === 'administrador';
+    const isAdmin = ['ADMIN','administrador','TECNICO','TECHNICIAN'].includes(role) || role.toLowerCase?.() === 'administrador';
 
     // Navegar al formulario pasando el laboratorio y si es de sólo lectura para usuarios no admin
     this.router.navigate(['/laboratorios/nuevo'], { state: { lab: lab, readonly: !isAdmin } });

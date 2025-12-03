@@ -46,4 +46,12 @@ export class LoansService {
   return(id: number, damaged: boolean = false): Observable<Prestamo> {
     return this.http.post<Prestamo>(`${this.baseUrl}/${id}/return/`, { damaged });
   }
+
+  markDamaged(id: number): Observable<Prestamo> {
+    return this.http.post<Prestamo>(`${this.baseUrl}/${id}/mark-damaged/`, {});
+  }
+
+  markReturned(id: number): Observable<Prestamo> {
+    return this.http.post<Prestamo>(`${this.baseUrl}/${id}/mark-returned/`, {});
+  }
 }

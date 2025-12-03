@@ -28,7 +28,13 @@ export class RoleGuard implements CanActivate {
 
     // Si la ruta requiere roles específicos, verificar
     const requiredRoles: UserRole[] = route.data['roles'] || [];
-    
+
+    // Permitir edición propia: si la ruta tiene parámetro id y coincide con el usuario autenticado, permitir
+    const routeId = route.paramMap.get('id');
+    if (routeId && Number(routeId) === (user as any).id) {
+      return true;
+    }
+
     if (requiredRoles.length > 0 && !requiredRoles.includes(user.role)) {
       console.warn(`Usuario con rol ${user.role} intentó acceder a ruta que requiere: ${requiredRoles.join(', ')}`);
       this.router.navigate(['/']);

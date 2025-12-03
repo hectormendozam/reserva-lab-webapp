@@ -82,14 +82,14 @@
                     </div>
                     
                     <!-- Campo para Técnico: Departamento -->
-                    <div class="col-md-6 mb-3" *ngIf="isTecnico">
+                    <div class="col-md-6 mb-3" *ngIf="isTecnico || isAdmin">
                       <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Departamento</mat-label>
                         <input matInput [(ngModel)]="user.departamento" name="departamento">
                       </mat-form-field>
                     </div>
 
-                    <div class="col-md-6 mb-3" *ngIf="isTecnico">
+                    <div class="col-md-6 mb-3" *ngIf="isTecnico || isAdmin">
                       <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Num. Trabajador</mat-label>
                         <input matInput [(ngModel)]="user.matricula" name="matricula">

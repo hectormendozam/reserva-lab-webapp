@@ -1,11 +1,9 @@
 <div class="wrapper">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <!-- Desktop/Tablet: Traditional Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light d-none d-lg-block">
     <div class="container-fluid">
       <a class="navbar-brand" routerLink="/reservas">ReservaLab</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link" [routerLink]="inicioRuta" routerLinkActive="active">Inicio</a>
@@ -42,4 +40,71 @@
       </div>
     </div>
   </nav>
+
+  <!-- Mobile: Top bar + Retractable Sidebar -->
+  <div class="mobile-nav d-lg-none">
+    <div class="mobile-topbar">
+      <button class="mobile-menu-toggle" (click)="toggleSidebar()" aria-label="Toggle menu">
+        <i class="bi bi-list"></i>
+      </button>
+      <a class="mobile-brand" routerLink="/reservas">ReservaLab</a>
+      <div class="mobile-user-menu">
+        <div class="dropdown">
+          <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" routerLink="/perfil"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" (click)="logout()"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" [class.show]="sidebarOpen" (click)="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="mobile-sidebar" [class.show]="sidebarOpen">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Menú</span>
+        <button class="sidebar-close" (click)="toggleSidebar()" aria-label="Close menu">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li>
+          <a [routerLink]="inicioRuta" routerLinkActive="active" (click)="toggleSidebar()">
+            <i class="bi bi-house-door me-2"></i>Inicio
+          </a>
+        </li>
+        <li>
+          <a routerLink="/reservas" routerLinkActive="active" (click)="toggleSidebar()">
+            <i class="bi bi-calendar-check me-2"></i>Reservas
+          </a>
+        </li>
+        <li>
+          <a routerLink="/prestamos" routerLinkActive="active" (click)="toggleSidebar()">
+            <i class="bi bi-box-seam me-2"></i>Préstamos
+          </a>
+        </li>
+        <li *ngIf="isAdmin">
+          <a routerLink="/laboratorios" routerLinkActive="active" (click)="toggleSidebar()">
+            <i class="bi bi-building me-2"></i>Laboratorios
+          </a>
+        </li>
+        <li *ngIf="isAdmin">
+          <a routerLink="/equipos" routerLinkActive="active" (click)="toggleSidebar()">
+            <i class="bi bi-tools me-2"></i>Equipos
+          </a>
+        </li>
+        <li *ngIf="isAdmin">
+          <a routerLink="/usuarios" routerLinkActive="active" (click)="toggleSidebar()">
+            <i class="bi bi-people me-2"></i>Usuarios
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

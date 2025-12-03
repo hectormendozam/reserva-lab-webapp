@@ -36,7 +36,7 @@ export class ReportsScreenComponent implements OnInit {
   usageChartLabels: string[] = [];
   usageChartData: number[] = [];
 
-  columnasOcupacion: string[] = ['nombreLaboratorio', 'periodo', 'tasaOcupacion'];
+  columnasOcupacion: string[] = ['nombre', 'periodo', 'tasaOcupacion'];
   columnasUso: string[] = ['nombreEquipo', 'totalPrestamos'];
   columnasIncidencias: string[] = ['nombreEquipo', 'tipoDano', 'fechaReporte'];
 
@@ -75,7 +75,7 @@ export class ReportsScreenComponent implements OnInit {
       this.cargarIncidencias();
     } else if (this.userRole === 'ESTUDIANTE') {
       this.cargarDatosEstudiante();
-    } else if (this.userRole === 'TECH') {
+    } else if (this.userRole === 'TECNICO') {
       this.cargarDatosTecnico();
     } else {
       // fallback
@@ -100,30 +100,45 @@ export class ReportsScreenComponent implements OnInit {
   }
 
   cargarDatosTecnico(): void {
+    console.log('Cargando datos para técnico...');
     // Cargar préstamos con status APROBADO (activos)
     this.loansService.list({ status: 'APROBADO' }).subscribe({
       next: (data) => {
-        this.prestamosActivos = data.filter(l => l.status === 'APROBADO' && !l.fechaDevolucion);
+        console.log('Préstamos APROBADO recibidos:', data);
+        // Activos: APROBADO y sin fechaEntrega (no devueltos aún)
+        this.prestamosActivos = data.filter(l => l.status === 'APROBADO' && !l.fechaEntrega);
+        console.log('Préstamos activos filtrados:', this.prestamosActivos);
+        
         const ahora = new Date();
+        ahora.setHours(0, 0, 0, 0); // Normalizar a inicio del día
+        
+        // Próximos a vencer: activos con fechaDevolucion en los próximos 7 días
         this.prestamosProximos = this.prestamosActivos.filter(l => {
-          const venc = new Date(l.fechaVencimiento);
+          if (!l.fechaDevolucion) return false;
+          const venc = new Date(l.fechaDevolucion);
+          venc.setHours(0, 0, 0, 0);
           const diff = (venc.getTime() - ahora.getTime()) / (1000 * 60 * 60 * 24);
-          return diff >=0 && diff <= 7; // próximos 7 días
+          console.log(`Préstamo ${l.id}: vencimiento=${l.fechaDevolucion}, diff=${diff} días`);
+          return diff >= 0 && diff <= 7;
         });
+        console.log('Préstamos próximos a vencer:', this.prestamosProximos);
       },
       error: (err) => console.error('Error cargando préstamos activos para técnico:', err)
     });
 
     // Cargar préstamos devueltos
     this.loansService.list({ status: 'DEVUELTO' }).subscribe({
-      next: (data) => this.prestamosDevueltos = data,
+      next: (data) => {
+        console.log('Préstamos DEVUELTO recibidos:', data);
+        this.prestamosDevueltos = data;
+      },
       error: (err) => console.error('Error cargando préstamos devueltos:', err)
     });
   }
 
-  diasRestantes(fechaVencimiento?: string): number {
-    if (!fechaVencimiento) return 0;
-    const venc = new Date(fechaVencimiento);
+  diasRestantes(fechaDevolucion?: string): number {
+    if (!fechaDevolucion) return 0;
+    const venc = new Date(fechaDevolucion);
     const diffMs = venc.getTime() - Date.now();
     return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
   }
@@ -134,9 +149,9 @@ export class ReportsScreenComponent implements OnInit {
     this.reportsService.occupancy().subscribe({
       next: (data) => {
         this.ocupacion = data;
-        // preparar datos para gráfico
-        this.occupancyChartLabels = data.map(d => d.nombreLaboratorio);
-        this.occupancyChartData = data.map(d => Math.round((d.tasaOcupacion || 0) * 100));
+        // preparar datos para gráfico - backend usa 'nombre' para lab
+        this.occupancyChartLabels = data.map(d => d.nombre || '');
+        this.occupancyChartData = data.map(d => Math.round(((d.tasaOcupacion || d.tasa_ocupacion || 0) as number) * 100));
         this.cargandoOcupacion = false;
       },
       error: () => {
@@ -152,9 +167,9 @@ export class ReportsScreenComponent implements OnInit {
     this.reportsService.equipmentUsage().subscribe({
       next: (data) => {
         this.usoEquipos = data;
-        // preparar datos para gráfico
-        this.usageChartLabels = data.map(d => d.nombreEquipo);
-        this.usageChartData = data.map(d => d.totalPrestamos || 0);
+        // preparar datos para gráfico - backend agrega por equipo__nombre
+        this.usageChartLabels = data.map(d => d.equipo__nombre || d.nombre || '');
+        this.usageChartData = data.map(d => (d.totalPrestamos || d.total_prestamos || 0) as number);
         this.cargandoUso = false;
       },
       error: () => {

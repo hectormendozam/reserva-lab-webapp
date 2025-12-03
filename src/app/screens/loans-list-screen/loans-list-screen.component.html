@@ -20,8 +20,29 @@
         
         <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
+        <div *ngIf="!cargando && prestamos.length" class="mb-3">
+          <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center mb-3">
+            <input 
+              type="text" 
+              class="form-control form-control-sm" 
+              placeholder="Buscar por equipo o estado..."
+              (keyup)="aplicarFiltro($event)"
+              style="max-width: 300px;"
+            />
+            <select 
+              class="form-select form-select-sm" 
+              (change)="cambiarOrden($any($event.target).value)"
+              style="max-width: 200px;"
+            >
+              <option value="fecha">Ordenar por fecha</option>
+              <option value="estado">Ordenar por estado</option>
+            </select>
+          </div>
+        </div>
+
         <div *ngIf="!cargando && prestamos.length" class="mat-elevation-z8">
-          <table mat-table [dataSource]="prestamos" class="w-100">
+          <table mat-table [dataSource]="dataSource" class="w-100">
+            
             <!-- Columna ID -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -31,13 +52,20 @@
             <!-- Columna Usuario -->
             <ng-container matColumnDef="usuario">
               <th mat-header-cell *matHeaderCellDef>Usuario</th>
-              <td mat-cell *matCellDef="let p">{{ p.user?.first_name ? (p.user.first_name + ' ' + p.user.last_name) : (p.user?.email ? p.user.email : p.user) }}</td>
+              <td mat-cell *matCellDef="let p">
+                {{ p.user?.first_name 
+                    ? (p.user.first_name + ' ' + p.user.last_name) 
+                    : (p.user?.email ? p.user.email : p.user) 
+                }}
+              </td>
             </ng-container>
 
             <!-- Columna Equipo -->
             <ng-container matColumnDef="equipo">
               <th mat-header-cell *matHeaderCellDef>Equipo</th>
-              <td mat-cell *matCellDef="let p">{{ p.equipo?.name ? p.equipo.name : p.equipo }}</td>
+              <td mat-cell *matCellDef="let p">
+                {{ p.equipo?.name ? p.equipo.name : p.equipo }}
+              </td>
             </ng-container>
 
             <!-- Columna Cantidad -->
@@ -55,7 +83,7 @@
             <!-- Columna Fecha vencimiento -->
             <ng-container matColumnDef="fechaVencimiento">
               <th mat-header-cell *matHeaderCellDef>Devolución prevista</th>
-              <td mat-cell *matCellDef="let p">{{ p.fechaVencimiento | date:'dd/MM/yyyy' }}</td>
+              <td mat-cell *matCellDef="let p">{{ p.fechaDevolucion | date:'dd/MM/yyyy' }}</td>
             </ng-container>
 
             <!-- Columna Estado -->
@@ -78,18 +106,21 @@
                         matTooltip="Aprobar">
                   <mat-icon>check_circle</mat-icon>
                 </button>
+
                 <button mat-icon-button color="warn" 
                         (click)="rechazar(p)" 
                         [disabled]="p.status !== 'PENDIENTE'"
                         matTooltip="Rechazar">
                   <mat-icon>cancel</mat-icon>
                 </button>
+
                 <button mat-icon-button color="accent"
                         (click)="devolver(p, false)" 
                         [disabled]="p.status !== 'APROBADO'"
                         matTooltip="Marcar como devuelto">
                   <mat-icon>assignment_return</mat-icon>
                 </button>
+
                 <button mat-icon-button 
                         (click)="devolver(p, true)" 
                         [disabled]="p.status !== 'APROBADO'"
@@ -102,7 +133,14 @@
 
             <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
             <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+
           </table>
+
+          <mat-paginator 
+            [pageSizeOptions]="[5, 10, 25]" 
+            pageSize="10" 
+            showFirstLastButtons>
+          </mat-paginator>
         </div>
 
         <div *ngIf="!cargando && !prestamos.length" class="alert alert-info mt-3">

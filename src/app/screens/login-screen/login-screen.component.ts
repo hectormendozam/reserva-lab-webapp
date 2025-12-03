@@ -57,7 +57,7 @@ export class LoginScreenComponent implements OnInit{
         
         // Redirigir según el rol del usuario
         const userRole = response.user.role;
-        if(userRole === 'ADMIN' || userRole === 'TECH'){
+        if(userRole === 'ADMIN' || userRole === 'TECNICO'){
           this.router.navigate(["/reservas"]);
         } else if(userRole === 'ESTUDIANTE'){
           this.router.navigate(["/reservas"]);

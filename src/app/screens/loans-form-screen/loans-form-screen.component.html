@@ -17,7 +17,7 @@
                 <mat-select formControlName="equipo">
                   <mat-option value="" disabled>Selecciona un equipo</mat-option>
                   <mat-option *ngFor="let eq of equipos" [value]="eq.id">
-                    {{ eq.name }} (Disponibles: {{ eq.cantidadDisponible }}/{{ eq.cantidadTotal }})
+                    {{ eq.nombre }} (Disponibles: {{ eq.cantidadDisponible }}/{{ eq.cantidadTotal }})
                   </mat-option>
                 </mat-select>
                 <mat-error *ngIf="formulario.get('equipo')?.hasError('required')">

@@ -1,4 +1,4 @@
-export type UserRole = 'ADMIN' | 'TECH' | 'ESTUDIANTE';
+export type UserRole = 'ADMIN' | 'TECNICO' | 'ESTUDIANTE';
 
 export interface User {
   id: number;
@@ -13,7 +13,7 @@ export type LabStatus = 'ACTIVO' | 'INACTIVO' | 'MANTENIMIENTO';
 
 export interface Lab {
   id: number;
-  name: string;
+  nombre: string;
   edificio: string;
   piso: string;
   capacidad: number;
@@ -25,7 +25,7 @@ export type EquipmentStatus = 'DISPONIBLE' | 'MANTENIMIENTO';
 
 export interface Equipment {
   id: number;
-  name: string;
+  nombre: string;
   descripcion: string;
   numeroInventario: string;
   cantidadTotal: number;
@@ -47,14 +47,15 @@ export interface Reservacion {
   status: ReservacionStatus;
 }
 
-export type PrestamoStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'DEVUELTO' | 'DAÑADO';
+export type PrestamoStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'DEVUELTO' | 'DANADO';
 export interface Prestamo {
   id: number;
   user: number; // User id
   equipo: number; // Equipment id
   cantidad: number;
-  fechaPrestamo: string;    // ISO date
-  fechaVencimiento: string;     // ISO date
-  fechaDevolucion?: string; // ISO date opcional
+  fechaPrestamo: string;      // ISO date - cuando se solicitó
+  fechaDevolucion: string;    // ISO date - fecha límite para devolver
+  fechaEntrega?: string;      // ISO date opcional - cuando realmente se devolvió
+  danado: boolean;
   status: PrestamoStatus;
 }

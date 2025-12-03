@@ -76,11 +76,11 @@ export class UsersListScreenComponent implements OnInit {
   }
 
   abrirEliminar(user: User): void {
-    // Mapear rol del backend (ADMIN/TECH/ESTUDIANTE) a nombres esperados por el modal
+    // Mapear rol del backend (ADMIN/TECNICO/ESTUDIANTE) a nombres esperados por el modal
     let rolModal = '';
     switch (user.role) {
       case 'ADMIN': rolModal = 'administrador'; break;
-      case 'TECH': rolModal = 'maestro'; break;
+      case 'TECNICO': rolModal = 'tecnico'; break;
       case 'ESTUDIANTE': rolModal = 'alumno'; break;
       default: rolModal = user.role || '';
     }
@@ -102,7 +102,7 @@ export class UsersListScreenComponent implements OnInit {
     switch (rol) {
       case 'ADMIN':
         return 'Administrador';
-      case 'TECH':
+      case 'TECNICO':
         return 'Técnico';
       case 'ESTUDIANTE':
         return 'Estudiante';

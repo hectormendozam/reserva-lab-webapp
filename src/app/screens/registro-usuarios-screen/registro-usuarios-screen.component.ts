@@ -26,7 +26,7 @@ export class RegistroUsuariosScreenComponent implements OnInit{
   public tipo_user:string = "";
   //Info del usuario
   public idUser: Number = 0;
-  public rol: string = "";
+  public role: string = "";
 
   constructor(
     private location : Location,
@@ -37,9 +37,9 @@ export class RegistroUsuariosScreenComponent implements OnInit{
 
   ngOnInit(): void {
     //Obtener de la URL el rol para saber cual editar
-    if(this.activatedRoute.snapshot.params['rol'] != undefined){
-      this.rol = this.activatedRoute.snapshot.params['rol'];
-      console.log("Rol detect: ", this.rol);
+    if(this.activatedRoute.snapshot.params['role'] != undefined){
+      this.role = this.activatedRoute.snapshot.params['role'];
+      console.log("Rol detect: ", this.role);
     }
     //El if valida si existe un parámetro en la URL
     if(this.activatedRoute.snapshot.params['id'] != undefined){
@@ -102,7 +102,7 @@ export class RegistroUsuariosScreenComponent implements OnInit{
     } else if(this.user.tipo_usuario === 'alumno'){
       role = 'ESTUDIANTE';
     } else if(this.user.tipo_usuario === 'tecnico'){
-      role = 'TECH';
+      role = 'TECNICO';
     }
 
     const registerData = {

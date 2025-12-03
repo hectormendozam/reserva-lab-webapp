@@ -36,7 +36,7 @@ export class EquipmentFormScreenComponent implements OnInit {
     }
 
     this.formulario = this.fb.group({
-      name: [null, [Validators.required, Validators.minLength(3)]],
+      nombre: [null, [Validators.required, Validators.minLength(3)]],
       descripcion: [null, Validators.required],
       numeroInventario: [null, [Validators.required, Validators.minLength(3)]],
       cantidadTotal: [1, [Validators.required, Validators.min(1)]],
@@ -55,7 +55,7 @@ export class EquipmentFormScreenComponent implements OnInit {
       this.equipmentId = eq.id;
 
       this.formulario.patchValue({
-        name: eq.name,
+        nombre: (eq as any).nombre,
         descripcion: eq.descripcion,
         numeroInventario: eq.numeroInventario,
         cantidadTotal: eq.cantidadTotal,

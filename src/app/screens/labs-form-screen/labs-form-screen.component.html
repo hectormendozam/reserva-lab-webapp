@@ -14,11 +14,11 @@
             <div class="col-md-12 mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Nombre del laboratorio</mat-label>
-                <input matInput formControlName="name">
-                <mat-error *ngIf="formulario.get('name')?.hasError('required')">
+                <input matInput formControlName="nombre">
+                <mat-error *ngIf="formulario.get('nombre')?.hasError('required')">
                   El nombre es obligatorio.
                 </mat-error>
-                <mat-error *ngIf="formulario.get('name')?.hasError('minlength')">
+                <mat-error *ngIf="formulario.get('nombre')?.hasError('minlength')">
                   El nombre debe tener al menos 3 caracteres.
                 </mat-error>
               </mat-form-field>

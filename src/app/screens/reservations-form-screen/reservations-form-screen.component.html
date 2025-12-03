@@ -17,7 +17,7 @@
                 <mat-select formControlName="lab">
                   <mat-option value="" disabled>Selecciona un laboratorio</mat-option>
                   <mat-option *ngFor="let lab of laboratorios" [value]="lab.id">
-                    {{ lab.name }}
+                    {{ lab.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error *ngIf="formulario.get('lab')?.hasError('required')">

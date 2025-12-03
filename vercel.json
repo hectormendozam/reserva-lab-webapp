@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "buildCommand": "npm install && npm run build -- --configuration production",
+  "outputDirectory": "dist/sistema-buap-webapp",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

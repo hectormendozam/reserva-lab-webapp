@@ -15,7 +15,7 @@ import { ReportsScreenComponent } from './screens/reports-screen/reports-screen.
 import { LandingScreenComponent } from './screens/landing-screen/landing-screen.component';
 import { ProfileScreenComponent } from './screens/profile-screen/profile-screen.component';
 import { UsersListScreenComponent } from './screens/users-list-screen/users-list-screen.component';
-import { RoleGuard } from './guards/role.guard';
+import { RoleGuard } from './shared/guards/role.guard';
 
 const routes: Routes = [
   { path: '', component: LandingScreenComponent, pathMatch: 'full' },

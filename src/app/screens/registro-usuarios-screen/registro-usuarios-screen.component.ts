@@ -13,18 +13,15 @@ import { passwordStrengthValidator } from '../../shared/validators';
 export class RegistroUsuariosScreenComponent implements OnInit{
 
   public tipo:string = "registro-usuarios";
-  //JSON para los usuarios (admin, maestros, alumnos)
   public user:any ={};
 
   public isUpdate:boolean = false;
   public errors:any = {};
-  //Banderas para el tipo de usuario
   public isAdmin:boolean = false;
   public isAlumno:boolean = false;
   public isTecnico:boolean = false;
   public editar: boolean = false;
   public tipo_user:string = "";
-  //Info del usuario
   public idUser: Number = 0;
   public role: string = "";
 
@@ -33,29 +30,21 @@ export class RegistroUsuariosScreenComponent implements OnInit{
     public activatedRoute: ActivatedRoute,
     private router: Router,
     private authService: AuthService
-  ){}
-
-  ngOnInit(): void {
-    //Obtener de la URL el rol para saber cual editar
+  ){}  ngOnInit(): void {
     if(this.activatedRoute.snapshot.params['role'] != undefined){
       this.role = this.activatedRoute.snapshot.params['role'];
       console.log("Rol detect: ", this.role);
     }
-    //El if valida si existe un parámetro en la URL
     if(this.activatedRoute.snapshot.params['id'] != undefined){
       this.editar = true;
-      //Asignamos a nuestra variable global el valor del ID que viene por la URL
       this.idUser = this.activatedRoute.snapshot.params['id'];
       console.log("ID User: ", this.idUser);
-      //Al iniciar la vista obtiene el usuario por su ID
       this.obtenerUserByID();
     }
 
   }
 
-  //Función para obtener un usuario por ID (para edición)
   public obtenerUserByID(){
-    // TODO: Implementar cuando el backend tenga endpoint de usuarios por ID
     console.log("Función pendiente de implementación");
   }
 
@@ -66,7 +55,6 @@ export class RegistroUsuariosScreenComponent implements OnInit{
       return;
     }
 
-    // Validar campos requeridos
     if(!this.user.first_name || !this.user.last_name) {
       alert("Nombre y apellido son obligatorios");
       return;
@@ -82,20 +70,17 @@ export class RegistroUsuariosScreenComponent implements OnInit{
       return;
     }
 
-    // Validar contraseña fuerte
     const passwordValidation = this.validatePasswordStrength(this.user.password);
     if(!passwordValidation.valid) {
       alert(passwordValidation.message);
       return;
     }
 
-    // Validar matrícula para alumnos
-    if(this.user.tipo_usuario === 'alumno' && !this.user.matricula) {
-      alert("La matrícula es obligatoria para estudiantes");
+    if(!this.user.matricula) {
+      alert("La matrícula/número de trabajador es obligatorio");
       return;
     }
 
-    // Mapear tipo_usuario a role según el modelo del backend
     let role = '';
     if(this.user.tipo_usuario === 'administrador'){
       role = 'ADMIN';
@@ -105,16 +90,22 @@ export class RegistroUsuariosScreenComponent implements OnInit{
       role = 'TECNICO';
     }
 
-    const registerData = {
+    const registerData: any = {
       email: this.user.email,
       password: this.user.password,
       first_name: this.user.first_name,
       last_name: this.user.last_name,
       role: role,
-      matricula: this.user.matricula || undefined,
-      carrera: this.user.carrera || undefined,
-      departamento: this.user.departamento || undefined,
+      matricula: this.user.matricula,
     };
+
+    if(this.user.tipo_usuario === 'alumno') {
+      registerData.carrera = this.user.carrera || '';
+      registerData.departamento = '';
+    } else {
+      registerData.departamento = this.user.departamento || '';
+      registerData.carrera = '';
+    }
 
     this.authService.register(registerData).subscribe(
       (response) => {
@@ -128,9 +119,6 @@ export class RegistroUsuariosScreenComponent implements OnInit{
     );
   }
 
-  /**
-   * Valida que la contraseña cumpla con los requisitos
-   */
   private validatePasswordStrength(password: string): { valid: boolean; message: string } {
     if (password.length < 8) {
       return { valid: false, message: 'La contraseña debe tener al menos 8 caracteres.' };

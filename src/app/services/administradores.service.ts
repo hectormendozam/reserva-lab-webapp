@@ -35,7 +35,6 @@ export class AdministradoresService {
     }
   }
 
-  //Validación para el formulario
   public validarAdmin(data: any, editar: boolean){
     console.log("Validando admin... ", data);
 
@@ -75,12 +74,9 @@ export class AdministradoresService {
       error["departamento"] = this.errorService.required;
     }
 
-    //Return arreglo
     return error;
   }
 
-  //Aquí van los servicios HTTP
-  //Servicio para registrar un nuevo usuario
   public registrarAdmin (data: any): Observable <any>{
     return this.http.post<any>(`${environment.url_api}/admin/`,data, httpOptions);
   }
@@ -91,26 +87,22 @@ export class AdministradoresService {
     return this.http.get<any>(`${environment.url_api}/lista-admins/`, {headers:headers});
   }
 
-  //Obtener un solo usuario dependiendo su ID
   public getAdminByID(idUser: Number){
     return this.http.get<any>(`${environment.url_api}/admin/?id=${idUser}`,httpOptions);
   }
 
-  //Servicio para actualizar un usuario
   public editarAdmin (data: any): Observable <any>{
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
     return this.http.put<any>(`${environment.url_api}/admins-edit/`, data, {headers:headers});
   }
 
-  //Eliminar Admin
   public eliminarAdmin(idUser: number): Observable <any>{
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
     return this.http.delete<any>(`${environment.url_api}/admins-edit/?id=${idUser}`,{headers:headers});
   }
 
-  //Obtener el total de cada uno de los usuarios del sistema
   public getTotalUsuarios(){
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});

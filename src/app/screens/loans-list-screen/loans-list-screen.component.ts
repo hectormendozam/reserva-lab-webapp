@@ -1,10 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Prestamo, PrestamoStatus } from '../../shared/models';
 import { LoansService } from '../../services/loans.service';
 import { AuthService } from '../../services/auth.service';
+import { ConfirmLoanModalComponent } from 'src/app/modals/confirm-loan-modal/confirm-loan-modal.component';
+import { ReturnEquipmentModalComponent } from 'src/app/modals/return-equipment-modal/return-equipment-modal.component';
+import { IncidentReportModalComponent } from 'src/app/modals/incident-report-modal/incident-report-modal.component';
 
 @Component({
   selector: 'app-loans-list-screen',
@@ -26,6 +30,7 @@ export class LoansListScreenComponent implements OnInit {
     private loansService: LoansService,
     private router: Router,
     private authService: AuthService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +75,6 @@ export class LoansListScreenComponent implements OnInit {
 
   actualizarDataSource(): void {
     let datos = [...this.prestamos];
-    // Aplicar filtro
     if (this.filtro.trim()) {
       const busqueda = this.filtro.toLowerCase();
       datos = datos.filter(p =>
@@ -78,7 +82,6 @@ export class LoansListScreenComponent implements OnInit {
         p.status?.toLowerCase().includes(busqueda)
       );
     }
-    // Aplicar orden
     datos.sort((a, b) => {
       let aVal: any, bVal: any;
       switch (this.ordenPor) {
@@ -114,14 +117,29 @@ export class LoansListScreenComponent implements OnInit {
   }
 
   aprobar(prestamo: Prestamo): void {
-    this.loansService.approve(prestamo.id).subscribe({
-      next: () => {
-        console.log('Préstamo aprobado:', prestamo.id);
-        this.cargarPrestamos();
+    const dialogRef = this.dialog.open(ConfirmLoanModalComponent, {
+      data: {
+        nombreEquipo: (prestamo.equipo as any)?.name || prestamo.equipo,
+        cantidad: prestamo.cantidad,
+        fechaPrestamo: prestamo.fechaPrestamo,
+        fechaDevolucion: prestamo.fechaDevolucion
       },
-      error: (err) => {
-        console.error('Error al aprobar préstamo:', err);
-        alert('No se pudo aprobar el préstamo. ' + (err?.error?.detail || err.message || ''));
+      width: '450px',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.loansService.approve(prestamo.id).subscribe({
+          next: () => {
+            console.log('Préstamo aprobado:', prestamo.id);
+            this.cargarPrestamos();
+          },
+          error: (err) => {
+            console.error('Error al aprobar préstamo:', err);
+            alert('No se pudo aprobar el préstamo. ' + (err?.error?.detail || err.message || ''));
+          }
+        });
       }
     });
   }
@@ -136,19 +154,46 @@ export class LoansListScreenComponent implements OnInit {
     });
   }
 
-  devolver(prestamo: Prestamo, danado: boolean = false): void {
-    const accion$ = danado
-      ? this.loansService.markDamaged(prestamo.id)
-      : this.loansService.markReturned(prestamo.id);
+  devolver(prestamo: Prestamo): void {
+    const dialogRef = this.dialog.open(ReturnEquipmentModalComponent, {
+      width: '450px',
+      disableClose: false
+    });
 
-    accion$.subscribe({
-      next: () => {
-        console.log(`Préstamo marcado como ${danado ? 'dañado' : 'devuelto'}:`, prestamo.id);
-        this.cargarPrestamos();
-      },
-      error: (err) => {
-        console.error(`Error al marcar como ${danado ? 'dañado' : 'devuelto'}:`, err);
-        alert(`No se pudo marcar como ${danado ? 'dañado' : 'devuelto'}. ` + (err?.error?.detail || err.message || ''));
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.confirmed) {
+        this.loansService.return(prestamo.id, false).subscribe({
+          next: () => {
+            console.log('Préstamo marcado como devuelto:', prestamo.id);
+            this.cargarPrestamos();
+          },
+          error: (err) => {
+            console.error('Error al marcar como devuelto:', err);
+            alert('No se pudo marcar como devuelto. ' + (err?.error?.detail || err.message || ''));
+          }
+        });
+      }
+    });
+  }
+
+  marcarDanado(prestamo: Prestamo): void {
+    const dialogRef = this.dialog.open(IncidentReportModalComponent, {
+      width: '450px',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.loansService.return(prestamo.id, true).subscribe({
+          next: () => {
+            console.log('Préstamo marcado como dañado:', prestamo.id);
+            this.cargarPrestamos();
+          },
+          error: (err) => {
+            console.error('Error al marcar como dañado:', err);
+            alert('No se pudo marcar como dañado. ' + (err?.error?.detail || err.message || ''));
+          }
+        });
       }
     });
   }

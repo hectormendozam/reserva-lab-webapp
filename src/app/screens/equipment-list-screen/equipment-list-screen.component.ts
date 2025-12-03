@@ -64,7 +64,6 @@ export class EquipmentListScreenComponent implements OnInit {
 
   actualizarDataSource(): void {
     let datos = [...this.equipos];
-    // Aplicar filtro
     if (this.filtro.trim()) {
       const busqueda = this.filtro.toLowerCase();
       datos = datos.filter(eq =>
@@ -73,7 +72,6 @@ export class EquipmentListScreenComponent implements OnInit {
         eq.numeroInventario?.toLowerCase().includes(busqueda)
       );
     }
-    // Aplicar orden
     datos.sort((a, b) => {
       let aVal: any, bVal: any;
       switch (this.ordenPor) {

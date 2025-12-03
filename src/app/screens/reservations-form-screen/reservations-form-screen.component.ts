@@ -54,7 +54,6 @@ export class ReservationsFormScreenComponent implements OnInit {
     this.labsService.list({ status: 'ACTIVO' }).subscribe({
       next: (labs) => {
         this.laboratorios = labs;
-        // Si no hay laboratorios, usar datos de ejemplo
         if (this.laboratorios.length === 0) {
           this.laboratorios = [
             { id: 1, nombre: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
@@ -66,7 +65,6 @@ export class ReservationsFormScreenComponent implements OnInit {
         console.log('Laboratorios cargados:', this.laboratorios);
       },
       error: (err) => {
-        // En caso de error, también usar datos de ejemplo
         this.laboratorios = [
           { id: 1, nombre: 'Laboratorio de Cómputo 1', edificio: 'Edificio A', piso: '1', capacidad: 30, tipo: 'COMPUTO', status: 'ACTIVO' },
           { id: 2, nombre: 'Laboratorio de Electrónica', edificio: 'Edificio B', piso: '2', capacidad: 25, tipo: 'ELECTRONICA', status: 'ACTIVO' },
@@ -84,7 +82,6 @@ export class ReservationsFormScreenComponent implements OnInit {
       return;
     }
 
-    // Validar que horaInicio < horaFin
     if (this.formulario.hasError('horasIncoherentes')) {
       this.error = 'La hora de inicio debe ser menor a la hora de fin.';
       return;

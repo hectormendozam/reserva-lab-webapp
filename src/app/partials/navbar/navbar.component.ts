@@ -16,17 +16,15 @@ export class NavbarComponent implements OnInit{
   public isEstudiante: boolean = false;
   public isTecnico: boolean = false;
   public inicioRuta: string = "/reports"; // Ruta por defecto para admin
-  public sidebarOpen: boolean = false; // Para control del sidebar en móvil
+  public sidebarOpen: boolean = false;
 
   constructor(private router: Router){}
 
   ngOnInit() {
-    // Obtener información del usuario desde localStorage
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
         const user: any = JSON.parse(userStr);
-        // Normalizar compatibilidad: si viene 'rol' desde backend, mapear a 'role'
         if (user && !user.role && user.rol) {
           user.role = user.rol;
         }
@@ -37,13 +35,12 @@ export class NavbarComponent implements OnInit{
         this.isEstudiante = (user.role === 'ESTUDIANTE');
         this.isTecnico = (user.role === 'TECNICO');
         
-        // Configurar ruta de inicio según rol
         if (this.isAdmin) {
-          this.inicioRuta = "/reports"; // Panel de reportes para admin
+          this.inicioRuta = "/reports";
         } else if (this.isTecnico) {
-          this.inicioRuta = "/inicio/tecnico"; // Panel de préstamos activos para técnico
+          this.inicioRuta = "/inicio/tecnico";
         } else if (this.isEstudiante) {
-          this.inicioRuta = "/inicio/estudiante"; // Historial de préstamos y reservas para estudiante
+          this.inicioRuta = "/inicio/estudiante";
         }
       } catch (e) {
         console.error('Error al parsear usuario:', e);
@@ -52,12 +49,10 @@ export class NavbarComponent implements OnInit{
   }
 
   public logout(){
-    // Limpiar localStorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
     
-    // Navegar al login
     this.router.navigate(['/auth/login']);
   }
 

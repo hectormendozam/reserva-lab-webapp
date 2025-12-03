@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-confirm-loan-modal',
@@ -12,7 +12,10 @@ export class ConfirmLoanModalComponent implements OnInit {
   public fechaPrestamo: string = "";
   public fechaDevolucion: string = "";
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<ConfirmLoanModalComponent>
+  ) {}
 
   ngOnInit(): void {
     this.nombreEquipo = this.data?.nombreEquipo || 'Equipo';
@@ -22,10 +25,10 @@ export class ConfirmLoanModalComponent implements OnInit {
   }
 
   public cerrar_modal() {
-    // Retorna falso si no confirma
+    this.dialogRef.close(false);
   }
 
   public confirmarPrestamo() {
-    // Retorna true si confirma
+    this.dialogRef.close(true);
   }
 }

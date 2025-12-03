@@ -16,10 +16,8 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Obtener el token del localStorage
     const token = localStorage.getItem('access_token');
 
-    // Si existe el token, agregarlo a los headers
     if (token) {
       request = request.clone({
         setHeaders: {
@@ -28,11 +26,9 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
 
-    // Manejar errores de autenticación
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // Si recibe 401, limpiar el localStorage y redirigir al login
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
           localStorage.removeItem('user');

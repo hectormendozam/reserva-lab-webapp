@@ -34,8 +34,7 @@ export class TecnicosService {
       }
   }
 
-  //Validación para el formulario
-    public validarMaestro(data: any, editar: boolean){
+  public validarMaestro(data: any, editar: boolean){
       console.log("Validando maestro... ", data);
       let error: any = [];
   
@@ -68,12 +67,9 @@ export class TecnicosService {
           error["confirmar_password"] = this.errorService.required;
         }
       }
-      //Return arreglo
       return error;
     }
   
-    //Aquí van los servicios HTTP
-    //Servicio para registrar un nuevo usuario
     public registrarTecnico (data: any): Observable <any>{
       return this.http.post<any>(`${environment.url_api}/tecnicos/`,data, httpOptions);
     }
@@ -84,19 +80,16 @@ export class TecnicosService {
       return this.http.get<any>(`${environment.url_api}/lista-tecnicos/`, {headers:headers});
     }
   
-    //Obtener un solo tecnico dependiendo su ID
     public getTecnicoByID(idUser: Number){
       return this.http.get<any>(`${environment.url_api}/tecnicos/?id=${idUser}`,httpOptions);
     }
   
-    //Servicio para actualizar un usuario
     public editarTecnico (data: any): Observable <any>{
       var token = this.facadeService.getSessionToken();
       var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
       return this.http.put<any>(`${environment.url_api}/tecnicos-edit/`, data, {headers:headers});
     }
   
-    //Eliminar Tecnico
     public eliminarTecnico(idUser: number): Observable <any>{
       var token = this.facadeService.getSessionToken();
       var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});

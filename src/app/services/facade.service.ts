@@ -31,7 +31,6 @@ export class FacadeService {
     private errorService: ErrorsService,
   ) { }
 
-  //Funcion para validar login
   public validarLogin(username: String, password: String){
     var data = {
       "username": username,
@@ -55,8 +54,6 @@ export class FacadeService {
     return error;
   }
 
-  // Funciones básicas
-  //Iniciar sesión
   public login(username:String, password:String): Observable<any> {
     var data={
       username: username,
@@ -65,7 +62,6 @@ export class FacadeService {
     return this.http.post<any>(`${environment.url_api}/token/`,data, httpOptions);
   }
 
-  //Cerrar sesión
   public logout(): Observable<any> {
     var headers: any;
     var token = this.getSessionToken();
@@ -74,7 +70,6 @@ export class FacadeService {
   }
 
 
-  //Funciones para utilizar las cookies en web
   retrieveSignedUser(){
     var headers: any;
     var token = this.getSessionToken();

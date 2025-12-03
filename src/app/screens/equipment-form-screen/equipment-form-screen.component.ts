@@ -47,7 +47,6 @@ export class EquipmentFormScreenComponent implements OnInit {
 
     this.cargarLaboratorios();
 
-    // Revisar si se pasó un equipo por navigation state (para edición/readonly)
     const navState: any = history.state || {};
     if (navState && navState.equipment) {
       const eq = navState.equipment as Partial<Equipment>;

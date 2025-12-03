@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../shared/models';
 import { AuthService } from '../../services/auth.service';
@@ -13,6 +15,8 @@ import { EliminarUserModalComponent } from '../../modals/eliminar-user-modal/eli
 })
 export class UsersListScreenComponent implements OnInit {
   users: User[] = [];
+  dataSource: MatTableDataSource<User> = new MatTableDataSource<User>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   cargando = false;
   error?: string;
   columnasTabla: string[] = ['id', 'nombre', 'email', 'rol', 'acciones'];
@@ -32,6 +36,11 @@ export class UsersListScreenComponent implements OnInit {
       return;
     }
     this.cargarUsuarios();
+    setTimeout(() => {
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
+    }, 100);
   }
 
   cargarUsuarios(): void {
@@ -39,7 +48,6 @@ export class UsersListScreenComponent implements OnInit {
     this.error = undefined;
     this.usersService.list().subscribe({
       next: (data) => {
-        // Aceptar varias formas de respuesta del backend: array directo, { results: [] }, { data: [] }
         let list: any[] = [];
         if (Array.isArray(data)) {
           list = data as any[];
@@ -48,13 +56,15 @@ export class UsersListScreenComponent implements OnInit {
         } else if (data && Array.isArray((data as any).data)) {
           list = (data as any).data;
         } else if (data && typeof data === 'object') {
-          // intentar convertir valores a array si tiene forma { users: [...] }
           const maybeArray = Object.values(data).find(v => Array.isArray(v));
           if (Array.isArray(maybeArray)) list = maybeArray as any[];
         }
 
-        // Mostrar todos los usuarios sin filtro
         this.users = (list || []).filter(u => u);
+        this.dataSource = new MatTableDataSource<User>(this.users);
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
         this.cargando = false;
       },
       error: (err) => {
@@ -71,12 +81,10 @@ export class UsersListScreenComponent implements OnInit {
 
   abrirEditar(user: User): void {
     if (!user || !user.role) return;
-    // Redirigir al nuevo componente de edición dedicado
     this.router.navigate([`/editar-usuario/${user.id}`]);
   }
 
   abrirEliminar(user: User): void {
-    // Mapear rol del backend (ADMIN/TECNICO/ESTUDIANTE) a nombres esperados por el modal
     let rolModal = '';
     switch (user.role) {
       case 'ADMIN': rolModal = 'administrador'; break;

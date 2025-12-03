@@ -5,15 +5,11 @@
     </button>
   </div>
   <div class="body-modal">
-    <h1 class="title-modal">Confirmar Reserva</h1>
-    <span class="descripcion">
-      Laboratorio: <strong>{{ nombreLaboratorio }}</strong><br>
-      Fecha: <strong>{{ fecha | date:'dd/MM/yyyy' }}</strong><br>
-      Horario: <strong>{{ horaInicio }} - {{ horaFin }}</strong>
-    </span>
+    <h1 class="title-modal">Aprobar Reserva</h1>
+    <span class="descripcion">¿Estás seguro de que deseas aprobar esta reserva?</span>
     <div class="buttons-modal">
       <button mat-button class="btn-regresar" (click)="cerrar_modal()">Cancelar</button>
-      <button mat-button class="btn-eliminar" (click)="confirmar()">Confirmar Reserva</button>
+      <button mat-button class="btn-eliminar" (click)="confirmar()">Confirmar</button>
     </div>
   </div>
 </div>

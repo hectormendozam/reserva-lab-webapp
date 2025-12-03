@@ -41,7 +41,6 @@ export class LabsFormScreenComponent implements OnInit {
       status: ['ACTIVO', Validators.required],
     });
 
-    // Si se navegó con estado (por ejemplo desde la lista) precargar datos
     const navState: any = history.state || {};
     if (navState && navState.lab) {
       const lab = navState.lab as Partial<Lab>;

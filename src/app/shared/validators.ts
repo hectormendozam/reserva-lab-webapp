@@ -1,12 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-/**
- * Valida que la contraseña tenga:
- * - Mínimo 8 caracteres
- * - Al menos una mayúscula
- * - Al menos una minúscula
- * - Al menos un número
- */
 export function passwordStrengthValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.value;
@@ -37,9 +30,6 @@ export function passwordStrengthValidator(): ValidatorFn {
   };
 }
 
-/**
- * Valida que la fecha sea posterior a hoy (no permite fechas pasadas)
- */
 export function futureDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) return null;
@@ -50,10 +40,6 @@ export function futureDateValidator(): ValidatorFn {
   };
 }
 
-/**
- * Valida que horaInicio < horaFin en un FormGroup
- * Se debe aplicar al FormGroup, no al control individual
- */
 export function horasCoherentesValidator(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const horaInicio = group.get('horaInicio')?.value;
@@ -63,9 +49,6 @@ export function horasCoherentesValidator(): ValidatorFn {
   };
 }
 
-/**
- * Valida que fechaDevolucion >= fechaPrestamo en un FormGroup
- */
 export function fechasCoherentesValidator(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const fechaPrestamo = group.get('fechaPrestamo')?.value;
@@ -78,10 +61,6 @@ export function fechasCoherentesValidator(): ValidatorFn {
   };
 }
 
-/**
- * Valida que la cantidad solicitada no exceda la disponible
- * Este validador debe aplicarse dinámicamente cuando cambia el equipo
- */
 export function cantidadDisponibleValidator(cantidadDisponible: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) return null;
@@ -90,14 +69,8 @@ export function cantidadDisponibleValidator(cantidadDisponible: number): Validat
   };
 }
 
-/**
- * Validador que puede reutilizarse para validar nombres únicos (requiere backend)
- * Por ahora retorna null, la validación debe ocurrir en el backend
- */
 export function unicoValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    // La validación de unicidad debe ocurrir en el backend
-    // Este es un placeholder para futura implementación con async validators
     return null;
   };
 }

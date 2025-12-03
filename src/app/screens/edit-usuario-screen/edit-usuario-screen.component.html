@@ -57,8 +57,8 @@
                     <div class="col-md-6 mb-3">
                       <mat-form-field appearance="outline" class="w-100" disabled>
                         <mat-label>Contraseña</mat-label>
-                        <input matInput type="password" placeholder="No se puede editar aquí" disabled>
-                        <mat-hint>Para cambiar la contraseña, usa la opción de recuperación</mat-hint>
+                        <input matInput type="password" placeholder="No editable" disabled>
+                        <mat-hint>La contraseña no puede editarse</mat-hint>
                       </mat-form-field>
                     </div>
                     
@@ -97,7 +97,7 @@
                     </div>
                     
                     <!-- Botones -->
-                    <div class="col-12 mt-4 text-center">
+                    <div class="col-12 mt-3 text-center buttons-container">
                       <button mat-raised-button color="primary" (click)="actualizar()" class="me-3" [disabled]="loading">
                         {{ loading ? 'Guardando...' : 'Actualizar' }}
                       </button>

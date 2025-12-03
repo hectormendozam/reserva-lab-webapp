@@ -5,16 +5,11 @@
     </button>
   </div>
   <div class="body-modal">
-    <h1 class="title-modal">Confirmar Préstamo</h1>
-    <span class="descripcion">
-      Equipo: <strong>{{ nombreEquipo }}</strong><br>
-      Cantidad: <strong>{{ cantidad }}</strong><br>
-      Desde: <strong>{{ fechaPrestamo | date:'dd/MM/yyyy' }}</strong><br>
-      Hasta: <strong>{{ fechaDevolucion | date:'dd/MM/yyyy' }}</strong>
-    </span>
+    <h1 class="title-modal">Aprobar Préstamo</h1>
+    <span class="descripcion">¿Estás seguro de que deseas aprobar este préstamo?</span>
     <div class="buttons-modal">
       <button mat-button class="btn-regresar" (click)="cerrar_modal()">Cancelar</button>
-      <button mat-button class="btn-eliminar" (click)="confirmarPrestamo()">Confirmar Préstamo</button>
+      <button mat-button class="btn-eliminar" (click)="confirmarPrestamo()">Confirmar</button>
     </div>
   </div>
 </div>

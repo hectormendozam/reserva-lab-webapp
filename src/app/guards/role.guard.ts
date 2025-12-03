@@ -20,18 +20,18 @@ export class RoleGuard implements CanActivate {
     
     const user = this.authService.getAuthenticatedUser();
     
-    // Si no hay usuario, redirigir a login
     if (!user) {
       this.router.navigate(['/auth/login']);
       return false;
     }
 
-    // Si la ruta requiere roles específicos, verificar
     const requiredRoles: UserRole[] = route.data['roles'] || [];
 
-    // Permitir edición propia: si la ruta tiene parámetro id y coincide con el usuario autenticado, permitir
     const routeId = route.paramMap.get('id');
-    if (routeId && Number(routeId) === (user as any).id) {
+    const isEditingOwnProfile = routeId && Number(routeId) === (user as any).id;
+    const routePath = route.routeConfig?.path || '';
+    const isEditUsuarioRoute = routePath.includes('editar-usuario');
+    if (isEditingOwnProfile && isEditUsuarioRoute) {
       return true;
     }
 

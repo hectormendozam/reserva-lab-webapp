@@ -21,7 +21,7 @@
         <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
         <div *ngIf="!cargando && users.length" class="mat-elevation-z8">
-          <table mat-table [dataSource]="users" class="w-100">
+            <table mat-table [dataSource]="dataSource" class="w-100">
             <!-- Columna ID -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -60,8 +60,9 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
-            <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasTabla;"></tr>
           </table>
+            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </div>
 
         <div *ngIf="!cargando && !users.length" class="alert alert-info mt-3">

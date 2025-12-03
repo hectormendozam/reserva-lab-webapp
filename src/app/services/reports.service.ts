@@ -5,24 +5,23 @@ import { environment } from '../../environments/environment';
 
 export interface OccupancyReport {
   lab_id?: number;
-  nombre: string;  // Backend usa 'nombre' para el nombre del lab
-  periodo?: string;
-  tasaOcupacion?: number;
-  tasa_ocupacion?: number;  // Alias por si backend devuelve snake_case
+  nombreLab: string;  // Backend usa 'nombre' para el nombre del lab
+  fecha?: string;
+  horasReservadas?: number;
+  estadoReserva?: string;  // Alias por si backend devuelve snake_case
 }
 
 export interface EquipmentUsageReport {
-  equipo__nombre?: string;  // Backend agrega por equipo__nombre
-  nombre?: string;          // Alias si devuelve nombre directamente
-  totalPrestamos?: number;
-  total_prestamos?: number; // Alias snake_case
+  equipo_id: number;
+  equipo_name: string;        // Backend devuelve 'equipo_name'
+  prestamos_totales: number;
 }
 
 export interface IncidentReport {
-  idPrestamo: number;
-  nombreEquipo: string;
-  tipoDano: string;
-  fechaReporte: string;
+  loan_id: number;       // ID del préstamo
+  nombre: string;        // Nombre del equipo
+  tipo_dano: string;     // Tipo de daño (DANADO/DEVUELTO)
+  reported_at: string;   // Fecha de reporte (updated_at)
 }
 
 @Injectable({ providedIn: 'root' })
@@ -31,18 +30,31 @@ export class ReportsService {
 
   constructor(private http: HttpClient) {}
 
-  occupancy(params?: { period?: string }): Observable<OccupancyReport[]> {
-    const httpParams = new HttpParams({ fromObject: params ?? {} });
+    occupancy(params?: { date_from?: string; date_to?: string; lab?: number; status?: string }): Observable<OccupancyReport[]> {
+    let httpParams = new HttpParams();
+    if (params?.date_from) httpParams = httpParams.set('date_from', params.date_from);
+    if (params?.date_to) httpParams = httpParams.set('date_to', params.date_to);
+    if (params?.lab) httpParams = httpParams.set('lab', params.lab.toString());
+    if (params?.status) httpParams = httpParams.set('status', params.status);
+    
     return this.http.get<OccupancyReport[]>(`${this.baseUrl}/occupancy/`, { params: httpParams });
   }
 
-  equipmentUsage(params?: { from?: string; to?: string }): Observable<EquipmentUsageReport[]> {
-    const httpParams = new HttpParams({ fromObject: params ?? {} });
+  equipmentUsage(params?: { date_from?: string; date_to?: string; status?: string }): Observable<EquipmentUsageReport[]> {
+    let httpParams = new HttpParams();
+    if (params?.date_from) httpParams = httpParams.set('date_from', params.date_from);
+    if (params?.date_to) httpParams = httpParams.set('date_to', params.date_to);
+    if (params?.status) httpParams = httpParams.set('status', params.status);
+    
     return this.http.get<EquipmentUsageReport[]>(`${this.baseUrl}/equipment-usage/`, { params: httpParams });
   }
 
-  incidents(params?: { from?: string; to?: string }): Observable<IncidentReport[]> {
-    const httpParams = new HttpParams({ fromObject: params ?? {} });
+  incidents(params?: { date_from?: string; date_to?: string; status?: string }): Observable<IncidentReport[]> {
+    let httpParams = new HttpParams();
+    if (params?.date_from) httpParams = httpParams.set('date_from', params.date_from);
+    if (params?.date_to) httpParams = httpParams.set('date_to', params.date_to);
+    if (params?.status) httpParams = httpParams.set('status', params.status);
+    
     return this.http.get<IncidentReport[]>(`${this.baseUrl}/incidents/`, { params: httpParams });
   }
 }

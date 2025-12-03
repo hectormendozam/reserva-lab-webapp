@@ -35,7 +35,6 @@ export class AlumnosService {
     }
   }
 
-  //Validación para el formulario
   public validarAlumno(data: any, editar: boolean){
     console.log("Validando alumno... ", data);
     let error: any = [];
@@ -90,19 +89,13 @@ export class AlumnosService {
       error["ocupacion"] = this.errorService.required;
     }
 
-    //Return arreglo
     return error;
   }
 
-  //Aquí van los servicios HTTP
-  //Servicio para registrar un nuevo alumno
   public registrarAlumno (data: any): Observable <any>{
     return this.http.post<any>(`${environment.url_api}/alumnos/`,data, httpOptions);
   }
 
-  //TODO: Agregar servicio para editar alumno
-
-  //Eliminar Alumno
   public eliminarAlumno(idUser: number): Observable <any>{
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});

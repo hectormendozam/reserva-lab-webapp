@@ -46,7 +46,6 @@ export class LoansFormScreenComponent implements OnInit {
       { validators: fechasCoherentesValidator() }
     );
 
-    // Escuchar cambios en el equipo seleccionado para actualizar validadores de cantidad
     this.formulario.get('equipo')?.valueChanges.subscribe(equipoId => {
       const equipo = this.equipos.find(e => e.id === equipoId);
       if (equipo) {
@@ -67,7 +66,6 @@ export class LoansFormScreenComponent implements OnInit {
     this.equipmentService.list({ status: 'DISPONIBLE' }).subscribe({
       next: (equipos) => {
         this.equipos = equipos;
-        // Si no hay equipos, usar datos de ejemplo
         if (this.equipos.length === 0) {
           this.equipos = [
             { id: 1, nombre: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
@@ -79,7 +77,6 @@ export class LoansFormScreenComponent implements OnInit {
         console.log('Equipos cargados:', this.equipos);
       },
       error: (err) => {
-        // En caso de error, también usar datos de ejemplo
         this.equipos = [
           { id: 1, nombre: 'Proyector Epson', descripcion: 'Proyector multimedia', numeroInventario: 'PROJ-001', cantidadTotal: 10, cantidadDisponible: 8, status: 'DISPONIBLE' },
           { id: 2, nombre: 'Laptop HP', descripcion: 'Laptop para préstamo', numeroInventario: 'LAP-001', cantidadTotal: 15, cantidadDisponible: 12, status: 'DISPONIBLE' },
@@ -97,13 +94,11 @@ export class LoansFormScreenComponent implements OnInit {
       return;
     }
 
-    // Validar que fechaDevolucion >= fechaPrestamo
     if (this.formulario.hasError('fechasIncoherentes')) {
       this.error = 'La fecha de devolución debe ser igual o posterior a la fecha de préstamo.';
       return;
     }
 
-    // Validar cantidad disponible
     const equipoId = this.formulario.get('equipo')?.value;
     const cantidad = this.formulario.get('cantidad')?.value;
     const equipo = this.equipos.find(e => e.id === equipoId);
@@ -117,12 +112,22 @@ export class LoansFormScreenComponent implements OnInit {
     this.error = undefined;
 
     const valores = this.formulario.value;
+    
+    const formatDate = (date: any): string => {
+      if (!date) return '';
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
     const nuevoPrestamo: Partial<Prestamo> = {
       user: this.usuarioId,
-      equipo: valores.equipo,
-      cantidad: valores.cantidad,
-      fechaPrestamo: valores.fechaPrestamo,
-      fechaDevolucion: valores.fechaDevolucion,
+      equipo: Number(valores.equipo),
+      cantidad: Number(valores.cantidad),
+      fechaPrestamo: formatDate(valores.fechaPrestamo),
+      fechaDevolucion: formatDate(valores.fechaDevolucion),
     };
 
     console.log('Enviando préstamo:', nuevoPrestamo);

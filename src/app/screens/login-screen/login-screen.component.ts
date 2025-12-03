@@ -28,7 +28,6 @@ export class LoginScreenComponent implements OnInit{
     this.load = true;
     this.errors = {};
 
-    // Validaciones básicas
     if(!this.username || this.username.trim() === ''){
       this.errors.username = 'El correo electrónico es requerido';
     }
@@ -36,26 +35,22 @@ export class LoginScreenComponent implements OnInit{
       this.errors.password = 'La contraseña es requerida';
     }
 
-    // Si hay errores, no continuar
     if(Object.keys(this.errors).length > 0){
       this.load = false;
       return;
     }
 
-    // Realizar login con el nuevo AuthService
     this.authService.login({
       email: this.username.toString(),
       password: this.password.toString()
     }).subscribe(
       (response) => {
-        // Guardar tokens en localStorage
         localStorage.setItem('access_token', response.access);
         localStorage.setItem('refresh_token', response.refresh);
         localStorage.setItem('user', JSON.stringify(response.user));
         
         this.load = false;
         
-        // Redirigir según el rol del usuario
         const userRole = response.user.role;
         if(userRole === 'ADMIN' || userRole === 'TECNICO'){
           this.router.navigate(["/reservas"]);

@@ -5,17 +5,11 @@
     </button>
   </div>
   <div class="body-modal">
-    <h1 class="title-modal">Devolver Equipo</h1>
-    <span class="descripcion">
-      Equipo: <strong>{{ nombreEquipo }}</strong><br>
-      Cantidad: <strong>{{ cantidad }}</strong><br>
-      <mat-checkbox [(ngModel)]="danado" class="mt-3 mb-3">
-        Marcar como dañado
-      </mat-checkbox>
-    </span>
+    <h1 class="title-modal">Marcar como Devuelto</h1>
+    <span class="descripcion">¿Estás seguro de que deseas marcar este equipo como devuelto?</span>
     <div class="buttons-modal">
       <button mat-button class="btn-regresar" (click)="cerrar_modal()">Cancelar</button>
-      <button mat-button class="btn-eliminar" (click)="devolverEquipo()">Confirmar Devolución</button>
+      <button mat-button class="btn-eliminar" (click)="devolverEquipo()">Confirmar</button>
     </div>
   </div>
 </div>

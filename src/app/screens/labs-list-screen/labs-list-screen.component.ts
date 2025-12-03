@@ -74,7 +74,6 @@ export class LabsListScreenComponent implements OnInit {
 
   actualizarDataSource(): void {
     let datos = [...this.laboratorios];
-    // Aplicar filtro
     if (this.filtro.trim()) {
       const busqueda = this.filtro.toLowerCase();
       datos = datos.filter(lab =>
@@ -83,7 +82,6 @@ export class LabsListScreenComponent implements OnInit {
         lab.tipo?.toLowerCase().includes(busqueda)
       );
     }
-    // Aplicar orden
     datos.sort((a, b) => {
       let aVal: any, bVal: any;
       switch (this.ordenPor) {
@@ -139,7 +137,6 @@ export class LabsListScreenComponent implements OnInit {
   }
   
   public abrirEditar(lab: Lab){
-    // Determinar rol del usuario desde localStorage
     let userStr = localStorage.getItem('user');
     let role = '';
     try{
@@ -148,12 +145,10 @@ export class LabsListScreenComponent implements OnInit {
 
     const isAdmin = ['ADMIN','administrador','TECNICO','TECHNICIAN'].includes(role) || role.toLowerCase?.() === 'administrador';
 
-    // Navegar al formulario pasando el laboratorio y si es de sólo lectura para usuarios no admin
     this.router.navigate(['/laboratorios/nuevo'], { state: { lab: lab, readonly: !isAdmin } });
   }
 
   public abrirEliminar(lab: Lab){
-    // Obtener rol del usuario
     let userStr = localStorage.getItem('user');
     let role = '';
     try{ if(userStr) role = JSON.parse(userStr).role || ''; }catch(e){ role = ''; }
@@ -166,10 +161,8 @@ export class LabsListScreenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result && result.isDelete){
-        // recargar lista
         this.cargarLaboratorios();
       }else{
-        // nothing
       }
     });
   }

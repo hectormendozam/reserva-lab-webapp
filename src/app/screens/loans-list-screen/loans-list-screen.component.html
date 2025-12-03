@@ -115,14 +115,14 @@
                 </button>
 
                 <button mat-icon-button color="accent"
-                        (click)="devolver(p, false)" 
+                        (click)="devolver(p)" 
                         [disabled]="p.status !== 'APROBADO'"
                         matTooltip="Marcar como devuelto">
                   <mat-icon>assignment_return</mat-icon>
                 </button>
 
                 <button mat-icon-button 
-                        (click)="devolver(p, true)" 
+                        (click)="marcarDanado(p)" 
                         [disabled]="p.status !== 'APROBADO'"
                         matTooltip="Marcar como dañado"
                         style="color: orange;">

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-confirm-reservation-modal',
@@ -13,7 +13,10 @@ export class ConfirmReservationModalComponent implements OnInit {
   public horaInicio: string = "";
   public horaFin: string = "";
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<ConfirmReservationModalComponent>
+  ) {}
 
   ngOnInit(): void {
     this.rol = this.data?.rol || '';
@@ -24,10 +27,10 @@ export class ConfirmReservationModalComponent implements OnInit {
   }
 
   public cerrar_modal() {
-    // Retorna falso si no confirma
+    this.dialogRef.close(false);
   }
 
   public confirmar() {
-    // Retorna true si confirma
+    this.dialogRef.close(true);
   }
 }

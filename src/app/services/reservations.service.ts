@@ -48,6 +48,6 @@ export class ReservationsService {
   }
 
   cancel(id: number, reason?: string): Observable<Reservacion> {
-    return this.http.post<Reservacion>(`${this.baseUrl}/${id}/cancel/`, { reason });
+    return this.http.post<Reservacion>(`${this.baseUrl}/${id}/cancel/`, { razonCancelacion: reason });
   }
 }

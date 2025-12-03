@@ -13,18 +13,15 @@ import { AuthService } from 'src/app/services/auth.service';
 export class EditUsuarioScreenComponent implements OnInit{
 
   public tipo:string = "editar-usuario";
-  //JSON para los usuarios (admin, maestros, alumnos)
   public user:any ={};
 
   public isUpdate:boolean = false;
   public errors:any = {};
-  //Banderas para el tipo de usuario
   public isAdmin:boolean = false;
   public isAlumno:boolean = false;
   public isTecnico:boolean = false;
   public editar: boolean = true;
   public tipo_user:string = "";
-  //Info del usuario
   public idUser: number = 0;
   public rol: string = "";
   public loading: boolean = false;
@@ -39,36 +36,32 @@ export class EditUsuarioScreenComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-    //Obtener el ID de la URL para editar
     if(this.activatedRoute.snapshot.params['id'] != undefined){
       this.editar = true;
       this.idUser = this.activatedRoute.snapshot.params['id'];
       console.log("ID User: ", this.idUser);
-      // Validar acceso: si viene por /editar-perfil/:id, permitir técnico/estudiante editar su propio perfil
       const authUser = this.authService.getAuthenticatedUser();
       if (authUser) {
         this.esPerfilPropio = Number(authUser.id) === Number(this.idUser);
       }
-      // Si no es admin y no es su propio perfil, bloquear
       if (!this.esPerfilPropio) {
-        // Se permite para admins mediante guard; para otros, solo si es propio
-        // Nota: El RoleGuard ya valida la ruta de admin; aquí solo protegemos editar-perfil
       }
-      //Al iniciar la vista obtiene el usuario por su ID
       this.obtenerUserByID();
     } else {
-      //Si no hay ID, redirigir a usuarios
       this.router.navigate(['/usuarios']);
     }
   }
 
-  //Función para obtener un usuario por ID (para edición)
   public obtenerUserByID(){
     this.loading = true;
-    this.usersService.get(this.idUser).subscribe(
+    
+    const request$ = this.esPerfilPropio
+      ? this.authService.me()
+      : this.usersService.get(this.idUser);
+    
+    request$.subscribe(
       (response: any) => {
         console.log("Usuario obtenido:", response);
-        // Manejar múltiples formatos de respuesta
         const userData = response.data || response || response.results;
         
         if(userData) {
@@ -79,10 +72,9 @@ export class EditUsuarioScreenComponent implements OnInit{
             matricula: userData.matricula || '',
             carrera: userData.carrera || '',
             departamento: userData.departamento || '',
-            role: userData.role || '', // Guardar el rol para referencia
+            role: userData.role || '',
           };
 
-          // Mapear role del backend a tipo_usuario
           if(userData.role === 'ADMIN'){
             this.user.tipo_usuario = 'administrador';
             this.setUserType('administrador');
@@ -100,19 +92,21 @@ export class EditUsuarioScreenComponent implements OnInit{
         console.error("Error al obtener usuario:", error);
         alert(error?.error?.detail || "Error al cargar los datos del usuario");
         this.loading = false;
-        this.router.navigate(['/usuarios']);
+        if (!this.esPerfilPropio) {
+          this.router.navigate(['/usuarios']);
+        } else {
+          this.router.navigate(['/perfil']);
+        }
       }
     );
   }
 
   public actualizar(){
-    // Validar que se haya seleccionado un tipo de usuario
-    if(!this.user.tipo_usuario){
+    if(!this.user.tipo_usuario && !this.esPerfilPropio){
       alert("Por favor selecciona un tipo de usuario");
       return;
     }
 
-    // Validar campos requeridos
     if(!this.user.first_name || !this.user.last_name) {
       alert("Nombre y apellido son obligatorios");
       return;
@@ -123,20 +117,20 @@ export class EditUsuarioScreenComponent implements OnInit{
       return;
     }
 
-    // Validar matrícula para alumnos
     if(this.user.tipo_usuario === 'alumno' && !this.user.matricula) {
       alert("La matrícula es obligatoria para estudiantes");
       return;
     }
 
-    // Mapear tipo_usuario a role según el modelo del backend
-    let role = '';
-    if(this.user.tipo_usuario === 'administrador'){
-      role = 'ADMIN';
-    } else if(this.user.tipo_usuario === 'alumno'){
-      role = 'ESTUDIANTE';
-    } else if(this.user.tipo_usuario === 'tecnico'){
-      role = 'TECNICO';
+    let role = this.user.role || '';
+    if(this.user.tipo_usuario){
+      if(this.user.tipo_usuario === 'administrador'){
+        role = 'ADMIN';
+      } else if(this.user.tipo_usuario === 'alumno'){
+        role = 'ESTUDIANTE';
+      } else if(this.user.tipo_usuario === 'tecnico'){
+        role = 'TECNICO';
+      }
     }
 
     const updateData = {
@@ -149,10 +143,23 @@ export class EditUsuarioScreenComponent implements OnInit{
       departamento: this.user.departamento || undefined,
     };
 
-    this.usersService.update(this.idUser, updateData).subscribe(
+    const request$ = this.esPerfilPropio
+      ? this.authService.updateMe(updateData)
+      : this.usersService.update(this.idUser, updateData);
+
+    request$.subscribe(
       (response) => {
         alert("Usuario actualizado exitosamente");
-        this.router.navigate(['/usuarios']);
+        if (this.esPerfilPropio) {
+          try {
+            localStorage.setItem('user', JSON.stringify(response));
+          } catch (e) {
+            console.warn('No se pudo actualizar localStorage:', e);
+          }
+          this.router.navigate(['/perfil']);
+        } else {
+          this.router.navigate(['/usuarios']);
+        }
       },
       (error) => {
         console.error("Error al actualizar usuario:", error);

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-incident-report-modal',
@@ -11,7 +11,10 @@ export class IncidentReportModalComponent implements OnInit {
   public tipoDano: string = "";
   public descripcion: string = "";
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<IncidentReportModalComponent>
+  ) {}
 
   ngOnInit(): void {
     this.nombreEquipo = this.data?.nombreEquipo || 'Equipo';
@@ -20,10 +23,10 @@ export class IncidentReportModalComponent implements OnInit {
   }
 
   public cerrar_modal() {
-    // Retorna falso si no confirma
+    this.dialogRef.close(false);
   }
 
   public reportarIncidente() {
-    // Retorna true si confirma
+    this.dialogRef.close(true);
   }
 }

@@ -36,7 +36,6 @@ export class ProfileScreenComponent implements OnInit {
 
   cargarPerfil(): void {
     this.cargando = true;
-    // Intentar obtener usuario desde AuthService primero
     const user = this.authService.getAuthenticatedUser();
     if (user) {
       this.usuario = user;
@@ -45,10 +44,14 @@ export class ProfileScreenComponent implements OnInit {
       this.actualizarFormulario();
       this.cargando = false;
       this.cdr.detectChanges();
-      return;
+      const faltanCampos = (!('departamento' in (this.usuario as any)) && (this.isAdmin || this.isTecnico))
+                        || (!('carrera' in (this.usuario as any)) && this.usuario.role === 'ESTUDIANTE')
+                        || (!('matricula' in (this.usuario as any)));
+      if (!faltanCampos) {
+        return;
+      }
     }
 
-    // Si no está en localStorage o no pudo parsear, intentar consulta al backend
     this.authService.me()?.subscribe({
       next: (u) => {
         this.usuario = u;
@@ -100,12 +103,10 @@ export class ProfileScreenComponent implements OnInit {
         departamento: (this.usuario as any).departamento || '',
       });
       
-      // Deshabilitar campos que no deben ser editables
       this.formulario.get('email')?.disable();
       this.formulario.get('role')?.disable();
       this.formulario.get('matricula')?.disable();
       
-      // En modo lectura, deshabilitar edición de nombres
       if (!this.editMode) {
         this.formulario.get('first_name')?.disable();
         this.formulario.get('last_name')?.disable();
@@ -118,12 +119,13 @@ export class ProfileScreenComponent implements OnInit {
   }
 
   activarEdicion(): void {
-    this.editMode = true;
-    // Habilitar campos editables
-    this.formulario.get('first_name')?.enable();
-    this.formulario.get('last_name')?.enable();
-    if (this.isAdmin || this.isTecnico) {
-      this.formulario.get('departamento')?.enable();
+    if (this.usuario?.id) {
+      this.router.navigate([`/editar-usuario/${this.usuario.id}`]);
+      return;
+    }
+    const user = this.authService.getAuthenticatedUser();
+    if (user?.id) {
+      this.router.navigate([`/editar-usuario/${user.id}`]);
     }
   }
 
@@ -160,7 +162,6 @@ export class ProfileScreenComponent implements OnInit {
       datos.departamento = this.formulario.get('departamento')?.value;
     }
 
-    // Validar nombres
     if (!datos.first_name || datos.first_name.trim().length < 2) {
       this.guardando = false;
       this.error = 'El nombre debe tener al menos 2 caracteres.';
@@ -173,11 +174,9 @@ export class ProfileScreenComponent implements OnInit {
       return;
     }
 
-    // Persistir cambios en backend
     if (this.usuario?.id) {
       this.usersService.update(this.usuario.id, datos).subscribe({
         next: (u) => {
-          // Actualizar usuario local y localStorage
           this.usuario = { ...this.usuario!, ...u } as User;
           try {
             localStorage.setItem('user', JSON.stringify(this.usuario));

@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Reservacion, ReservacionStatus } from '../../shared/models';
 import { ReservationsService } from '../../services/reservations.service';
 import { CancelarReservaModalComponent } from 'src/app/modals/cancelar-reserva-modal/cancelar-reserva-modal.component';
+import { ConfirmReservationModalComponent } from 'src/app/modals/confirm-reservation-modal/confirm-reservation-modal.component';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -73,7 +74,6 @@ export class ReservationsListScreenComponent implements OnInit {
 
   actualizarDataSource(): void {
     let datos = [...this.reservas];
-    // Aplicar filtro
     if (this.filtro.trim()) {
       const busqueda = this.filtro.toLowerCase();
       datos = datos.filter(r =>
@@ -81,7 +81,6 @@ export class ReservationsListScreenComponent implements OnInit {
         r.status?.toLowerCase().includes(busqueda)
       );
     }
-    // Aplicar orden
     datos.sort((a, b) => {
       let aVal: any, bVal: any;
       switch (this.ordenPor) {
@@ -117,11 +116,26 @@ export class ReservationsListScreenComponent implements OnInit {
   }
 
   aprobar(reserva: Reservacion): void {
-    this.reservationsService.approve(reserva.id).subscribe({
-      next: () => this.cargarReservas(),
-      error: (err) => {
-        console.error('Error al aprobar reserva:', err);
-        alert('No se pudo aprobar la reserva. ' + (err?.error?.detail || err.message || ''));
+    const dialogRef = this.dialog.open(ConfirmReservationModalComponent, {
+      data: {
+        nombreLaboratorio: (reserva.lab as any)?.nombre || reserva.lab,
+        fecha: reserva.fecha,
+        horaInicio: reserva.horaInicio,
+        horaFin: reserva.horaFin
+      },
+      width: '450px',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.reservationsService.approve(reserva.id).subscribe({
+          next: () => this.cargarReservas(),
+          error: (err) => {
+            console.error('Error al aprobar reserva:', err);
+            alert('No se pudo aprobar la reserva. ' + (err?.error?.detail || err.message || ''));
+          }
+        });
       }
     });
   }

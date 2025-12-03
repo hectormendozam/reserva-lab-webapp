@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   updateMe(payload: Partial<User> & { carrera?: string; departamento?: string; matricula?: string }): Observable<User> {
-    return this.http.put<User>(`${this.baseUrl}/me/`, payload);
+    return this.http.patch<User>(`${this.baseUrl}/me/`, payload);
   }
 
 
@@ -54,7 +54,6 @@ export class AuthService {
       const userStr = localStorage.getItem('user');
       if (!userStr) return null;
       const parsed: any = JSON.parse(userStr);
-      // Normalizar compatibilidad: si backend envía 'rol', mapear a 'role'
       if (parsed && !parsed.role && parsed.rol) {
         parsed.role = parsed.rol;
       }
@@ -64,7 +63,6 @@ export class AuthService {
       return null;
     }
   }
-
 
   getAuthenticatedUserId(): number {
     const user = this.getAuthenticatedUser();
